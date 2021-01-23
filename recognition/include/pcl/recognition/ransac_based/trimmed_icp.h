@@ -96,9 +96,9 @@ namespace pcl
           * for the alignment. If there is no guess, set the matrix to identity!
           * */
         inline void
-        align (const PointCloud& source_points, int num_source_points_to_use, Matrix4& guess_and_result) const
+        align (const PointCloud& source_points, index_t num_source_points_to_use, Matrix4& guess_and_result) const
         {
-          int num_trimmed_source_points = num_source_points_to_use, num_source_points = static_cast<int> (source_points.size ());
+          index_t num_trimmed_source_points = num_source_points_to_use, num_source_points = static_cast<index_t> (source_points.size ());
 
           if ( num_trimmed_source_points >= num_source_points )
           {
@@ -113,7 +113,7 @@ namespace pcl
 
           // Some variables for the closest point search
           pcl::PointXYZ transformed_source_point;
-          std::vector<int> target_index (1);
+          std::vector<index_t> target_index (1);
           std::vector<float> sqr_dist_to_target (1);
           float old_energy, energy = std::numeric_limits<float>::max ();
 
@@ -122,7 +122,7 @@ namespace pcl
           do
           {
             // Update the correspondences
-            for ( int i = 0 ; i < num_source_points ; ++i )
+            for ( index_t i = 0 ; i < num_source_points ; ++i )
             {
               // Transform the i-th source point based on the current transform matrix
               aux::transform (guess_and_result, source_points[i], transformed_source_point);
@@ -143,7 +143,7 @@ namespace pcl
             energy = 0.0f;
 
             // Now, setup the trimmed correspondences used for the transform estimation
-            for ( int i = 0 ; i < num_trimmed_source_points ; ++i )
+            for ( index_t i = 0 ; i < num_trimmed_source_points ; ++i )
             {
               trimmed_src_to_tgt[i].index_query = full_src_to_tgt[i].index_query;
               trimmed_src_to_tgt[i].index_match = full_src_to_tgt[i].index_match;

@@ -226,7 +226,7 @@ public:
    * \param[out] inlier_indices Indices for the inliers
    */
   inline void
-  getInliersIndices(std::vector<int>& inlier_indices)
+  getInliersIndices(std::vector<index_t>& inlier_indices)
   {
     inlier_indices = inlier_indices_;
   }
@@ -268,7 +268,7 @@ protected:
   Eigen::Matrix4f best_transformation_;
 
   bool refine_;
-  std::vector<int> inlier_indices_;
+  std::vector<index_t> inlier_indices_;
   bool save_inliers_;
 
 public:

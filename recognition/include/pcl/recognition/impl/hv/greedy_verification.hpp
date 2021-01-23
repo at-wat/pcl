@@ -59,16 +59,16 @@ template<typename ModelT, typename SceneT>
       RecognitionModelPtr recog_model (new RecognitionModel);
       // voxelize model cloud
       recog_model->cloud_.reset (new pcl::PointCloud<ModelT>);
-      recog_model->id_ = static_cast<int> (m);
+      recog_model->id_ = static_cast<index_t> (m);
 
       pcl::VoxelGrid<ModelT> voxel_grid;
       voxel_grid.setInputCloud (visible_models_[m]);
       voxel_grid.setLeafSize (resolution_, resolution_, resolution_);
       voxel_grid.filter (*(recog_model->cloud_));
 
-      std::vector<int> explained_indices;
-      std::vector<int> outliers;
-      std::vector<int> nn_indices;
+      std::vector<index_t> explained_indices;
+      std::vector<index_t> outliers;
+      std::vector<index_t> nn_indices;
       std::vector<float> nn_distances;
 
       for (std::size_t i = 0; i < recog_model->cloud_->size (); i++)
@@ -76,7 +76,7 @@ template<typename ModelT, typename SceneT>
         if (!scene_downsampled_tree_->radiusSearch ((*recog_model->cloud_)[i], inliers_threshold_, nn_indices, nn_distances,
                                                     std::numeric_limits<int>::max ()))
         {
-          outliers.push_back (static_cast<int> (i));
+          outliers.push_back (static_cast<index_t> (i));
         }
         else
         {
@@ -90,14 +90,14 @@ template<typename ModelT, typename SceneT>
       std::sort (explained_indices.begin (), explained_indices.end ());
       explained_indices.erase (std::unique (explained_indices.begin (), explained_indices.end ()), explained_indices.end ());
 
-      recog_model->bad_information_ = static_cast<int> (outliers.size ());
+      recog_model->bad_information_ = static_cast<index_t> (outliers.size ());
       recog_model->explained_ = explained_indices;
-      recog_model->good_information_ = static_cast<int> (explained_indices.size ());
+      recog_model->good_information_ = static_cast<index_t> (explained_indices.size ());
       recog_model->regularizer_ = regularizer_;
 
       recognition_models_.push_back (recog_model);
 
-      for (const int &explained_index : explained_indices)
+      for (const index_t &explained_index : explained_indices)
       {
         points_explained_by_rm_[explained_index].push_back (recog_model);
       }
@@ -121,7 +121,7 @@ template<typename ModelT, typename SceneT>
           * static_cast<float> (recognition_models_[i]->bad_information_)))
       {
         best_solution_[i] = true;
-        updateGoodInformation (static_cast<int> (i));
+        updateGoodInformation (static_cast<index_t> (i));
       }
       else
         best_solution_[i] = false;

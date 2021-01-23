@@ -36,7 +36,7 @@ KLDAdaptiveParticleFilterTracker<PointInT, StateT>::initCompute()
 template <typename PointInT, typename StateT>
 bool
 KLDAdaptiveParticleFilterTracker<PointInT, StateT>::insertIntoBins(
-    std::vector<int>&& new_bin, std::vector<std::vector<int>>& bins)
+    std::vector<index_t>&& new_bin, std::vector<std::vector<index_t>>& bins)
 {
   for (auto& existing_bin : bins) {
     if (equalBin(new_bin, existing_bin))
@@ -53,10 +53,10 @@ KLDAdaptiveParticleFilterTracker<PointInT, StateT>::resample()
   unsigned int k = 0;
   unsigned int n = 0;
   PointCloudStatePtr S(new PointCloudState);
-  std::vector<std::vector<int>> bins;
+  std::vector<std::vector<index_t>> bins;
 
   // initializing for sampling without replacement
-  std::vector<int> a(particles_->size());
+  std::vector<index_t> a(particles_->size());
   std::vector<double> q(particles_->size());
   this->genAliasTable(a, q, particles_);
 
@@ -74,9 +74,9 @@ KLDAdaptiveParticleFilterTracker<PointInT, StateT>::resample()
 
     S->points.push_back(x_t);
     // calc bin
-    std::vector<int> new_bin(StateT::stateDimension());
+    std::vector<index_t> new_bin(StateT::stateDimension());
     for (int i = 0; i < StateT::stateDimension(); i++)
-      new_bin[i] = static_cast<int>(x_t[i] / bin_size_[i]);
+      new_bin[i] = static_cast<index_t>(x_t[i] / bin_size_[i]);
 
     // calc bin index... how?
     if (insertIntoBins(std::move(new_bin), bins))
@@ -85,7 +85,7 @@ KLDAdaptiveParticleFilterTracker<PointInT, StateT>::resample()
   } while (n < maximum_particle_number_ && (k < 2 || n < calcKLBound(k)));
 
   particles_ = S; // swap
-  particle_num_ = static_cast<int>(particles_->size());
+  particle_num_ = static_cast<index_t>(particles_->size());
 }
 } // namespace tracking
 } // namespace pcl

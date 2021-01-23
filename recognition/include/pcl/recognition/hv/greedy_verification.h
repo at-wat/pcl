@@ -65,11 +65,11 @@ namespace pcl
       class RecognitionModel
       {
       public:
-        std::vector<int> explained_;
+        std::vector<index_t> explained_;
         typename pcl::PointCloud<ModelT>::Ptr cloud_;
-        int bad_information_;
-        int good_information_;
-        int id_;
+        index_t bad_information_;
+        index_t good_information_;
+        index_t id_;
         float regularizer_;
       };
 
@@ -95,7 +95,7 @@ namespace pcl
        */
       struct modelIndices
       {
-        int index_;
+        index_t index_;
         RecognitionModelPtr model_;
       };
 
@@ -137,7 +137,7 @@ namespace pcl
         for (std::size_t i = 0; i < recognition_models_.size (); i++)
         {
           modelIndices mi;
-          mi.index_ = static_cast<int> (i);
+          mi.index_ = static_cast<index_t> (i);
           mi.model_ = recognition_models_[i];
           indices_models_.push_back (mi);
         }
@@ -149,7 +149,7 @@ namespace pcl
 
       /** \brief Updates conflicting recognition hypotheses when a hypothesis is accepted */
       void
-      updateGoodInformation (int i)
+      updateGoodInformation (index_t i)
       {
         for (std::size_t k = 0; k < recognition_models_[i]->explained_.size (); k++)
         {

@@ -142,7 +142,7 @@ protected:
    * \param b index of the bin
    */
   virtual bool
-  equalBin(const std::vector<int>& a, const std::vector<int>& b)
+  equalBin(const std::vector<index_t>& a, const std::vector<index_t>& b)
   {
     int dimension = StateT::stateDimension();
     for (int i = 0; i < dimension; i++)
@@ -228,7 +228,7 @@ protected:
    * \param bins a set of the bins
    */
   virtual bool
-  insertIntoBins(std::vector<int>&& new_bin, std::vector<std::vector<int>>& bins);
+  insertIntoBins(std::vector<index_t>&& new_bin, std::vector<std::vector<index_t>>& bins);
 
   /** \brief This method should get called before starting the actual
    * computation. */

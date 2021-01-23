@@ -15,10 +15,10 @@ NearestPairPointCloudCoherence<PointInT>::computeCoherence(
   // for (std::size_t i = 0; i < indices->size (); i++)
   for (std::size_t i = 0; i < cloud->size(); i++) {
     PointInT input_point = (*cloud)[i];
-    std::vector<int> k_indices(1);
+    std::vector<index_t> k_indices(1);
     std::vector<float> k_distances(1);
     search_->nearestKSearch(input_point, 1, k_indices, k_distances);
-    int k_index = k_indices[0];
+    index_t k_index = k_indices[0];
     float k_distance = k_distances[0];
     if (k_distance < maximum_distance_ * maximum_distance_) {
       // nearest_targets.push_back (k_index);

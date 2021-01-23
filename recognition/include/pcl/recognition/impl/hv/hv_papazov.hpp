@@ -66,7 +66,7 @@ template<typename ModelT, typename SceneT>
       // voxelize model cloud
       recog_model->cloud_.reset (new pcl::PointCloud<ModelT>);
       recog_model->complete_cloud_.reset (new pcl::PointCloud<ModelT>);
-      recog_model->id_ = static_cast<int> (m);
+      recog_model->id_ = static_cast<index_t> (m);
 
       pcl::VoxelGrid<ModelT> voxel_grid;
       voxel_grid.setInputCloud (visible_models_[m]);
@@ -78,9 +78,9 @@ template<typename ModelT, typename SceneT>
       voxel_grid_complete.setLeafSize (resolution_, resolution_, resolution_);
       voxel_grid_complete.filter (*(recog_model->complete_cloud_));
 
-      std::vector<int> explained_indices;
-      std::vector<int> outliers;
-      std::vector<int> nn_indices;
+      std::vector<index_t> explained_indices;
+      std::vector<index_t> outliers;
+      std::vector<index_t> nn_indices;
       std::vector<float> nn_distances;
 
       for (std::size_t i = 0; i < recog_model->cloud_->size (); i++)
@@ -88,7 +88,7 @@ template<typename ModelT, typename SceneT>
         if (!scene_downsampled_tree_->radiusSearch ((*recog_model->cloud_)[i], inliers_threshold_, nn_indices, nn_distances,
                                                     std::numeric_limits<int>::max ()))
         {
-          outliers.push_back (static_cast<int> (i));
+          outliers.push_back (static_cast<index_t> (i));
         }
         else
         {
@@ -102,7 +102,7 @@ template<typename ModelT, typename SceneT>
       std::sort (explained_indices.begin (), explained_indices.end ());
       explained_indices.erase (std::unique (explained_indices.begin (), explained_indices.end ()), explained_indices.end ());
 
-      recog_model->bad_information_ = static_cast<int> (outliers.size ());
+      recog_model->bad_information_ = static_cast<index_t> (outliers.size ());
 
       if ((static_cast<float> (recog_model->bad_information_) / static_cast<float> (recog_model->complete_cloud_->size ()))
           <= penalty_threshold_ && (static_cast<float> (explained_indices.size ())
@@ -112,7 +112,7 @@ template<typename ModelT, typename SceneT>
         recognition_models_.push_back (recog_model);
 
         // update explained_by_RM_, add 1
-        for (const int &explained_index : explained_indices)
+        for (const index_t &explained_index : explained_indices)
         {
           explained_by_RM_[explained_index]++;
           points_explained_by_rm_[explained_index].push_back (recog_model);
@@ -141,12 +141,12 @@ template<typename ModelT, typename SceneT>
       typename boost::graph_traits<Graph>::adjacency_iterator ai;
       typename boost::graph_traits<Graph>::adjacency_iterator ai_end;
 
-      auto current = std::static_pointer_cast<RecognitionModel> (graph_id_model_map_[int (v)]);
+      auto current = std::static_pointer_cast<RecognitionModel> (graph_id_model_map_[index_t (v)]);
 
       bool a_better_one = false;
       for (boost::tie (ai, ai_end) = boost::adjacent_vertices (v, conflict_graph_); (ai != ai_end) && !a_better_one; ++ai)
       {
-        auto neighbour = std::static_pointer_cast<RecognitionModel> (graph_id_model_map_[int (*ai)]);
+        auto neighbour = std::static_pointer_cast<RecognitionModel> (graph_id_model_map_[index_t (*ai)]);
         if ((neighbour->explained_.size () >= current->explained_.size ()) && mask_[neighbour->id_])
         {
           a_better_one = true;
@@ -169,7 +169,7 @@ template<typename ModelT, typename SceneT>
     for (std::size_t i = 0; i < (recognition_models_.size ()); i++)
     {
       const typename Graph::vertex_descriptor v = boost::add_vertex (recognition_models_[i], conflict_graph_);
-      graph_id_model_map_[int (v)] = std::static_pointer_cast<RecognitionModel> (recognition_models_[i]);
+      graph_id_model_map_[index_t (v)] = std::static_pointer_cast<RecognitionModel> (recognition_models_[i]);
     }
 
     // iterate over the remaining models and check for each one if there is a conflict with another one

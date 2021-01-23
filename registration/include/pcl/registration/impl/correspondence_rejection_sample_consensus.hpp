@@ -73,9 +73,9 @@ CorrespondenceRejectorSampleConsensus<PointT>::getRemainingCorrespondences(
   if (save_inliers_)
     inlier_indices_.clear();
 
-  int nr_correspondences = static_cast<int>(original_correspondences.size());
-  std::vector<int> source_indices(nr_correspondences);
-  std::vector<int> target_indices(nr_correspondences);
+  index_t nr_correspondences = static_cast<index_t>(original_correspondences.size());
+  std::vector<index_t> source_indices(nr_correspondences);
+  std::vector<index_t> target_indices(nr_correspondences);
 
   // Copy the query-match indices
   for (std::size_t i = 0; i < original_correspondences.size(); ++i) {
@@ -110,7 +110,7 @@ CorrespondenceRejectorSampleConsensus<PointT>::getRemainingCorrespondences(
       return;
     }
 
-    std::vector<int> inliers;
+    std::vector<index_t> inliers;
     sac.getInliers(inliers);
 
     if (inliers.size() < 3) {
@@ -118,8 +118,8 @@ CorrespondenceRejectorSampleConsensus<PointT>::getRemainingCorrespondences(
       best_transformation_.setIdentity();
       return;
     }
-    std::unordered_map<int, int> index_to_correspondence;
-    for (int i = 0; i < nr_correspondences; ++i)
+    std::unordered_map<index_t, index_t> index_to_correspondence;
+    for (index_t i = 0; i < nr_correspondences; ++i)
       index_to_correspondence[original_correspondences[i].index_query] = i;
 
     remaining_correspondences.resize(inliers.size());

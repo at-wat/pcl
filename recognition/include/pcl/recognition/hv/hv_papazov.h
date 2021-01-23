@@ -68,19 +68,19 @@ namespace pcl
     class RecognitionModel
     {
       public:
-        std::vector<int> explained_; //indices vector referencing explained_by_RM_
+        std::vector<index_t> explained_; //indices vector referencing explained_by_RM_
         typename pcl::PointCloud<ModelT>::Ptr cloud_;
         typename pcl::PointCloud<ModelT>::Ptr complete_cloud_;
-        int bad_information_;
-        int id_;
+        index_t bad_information_;
+        index_t id_;
     };
 
     using RecognitionModelPtr = std::shared_ptr<RecognitionModel>;
 
-    std::vector<int> explained_by_RM_; //represents the points of scene_cloud_ that are explained by the recognition models
+    std::vector<index_t> explained_by_RM_; //represents the points of scene_cloud_ that are explained by the recognition models
     std::vector<RecognitionModelPtr> recognition_models_;
     std::vector<std::vector<RecognitionModelPtr>> points_explained_by_rm_; //if inner size > 1, conflict
-    std::map<int, RecognitionModelPtr> graph_id_model_map_;
+    std::map<index_t, RecognitionModelPtr> graph_id_model_map_;
 
     using Graph = boost::adjacency_list<boost::vecS, boost::vecS, boost::undirectedS, RecognitionModelPtr>;
     Graph conflict_graph_;

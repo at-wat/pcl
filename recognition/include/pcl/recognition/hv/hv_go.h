@@ -40,18 +40,18 @@ namespace pcl
       struct RecognitionModel
       {
         public:
-          std::vector<int> explained_; //indices vector referencing explained_by_RM_
+          std::vector<index_t> explained_; //indices vector referencing explained_by_RM_
           std::vector<float> explained_distances_; //closest distances to the scene for point i
-          std::vector<int> unexplained_in_neighborhood; //indices vector referencing unexplained_by_RM_neighboorhods
+          std::vector<index_t> unexplained_in_neighborhood; //indices vector referencing unexplained_by_RM_neighboorhods
           std::vector<float> unexplained_in_neighborhood_weights; //weights for the points not being explained in the neighborhood of a hypothesis
-          std::vector<int> outlier_indices_; //outlier indices of this model
-          std::vector<int> complete_cloud_occupancy_indices_;
+          std::vector<index_t> outlier_indices_; //outlier indices of this model
+          std::vector<index_t> complete_cloud_occupancy_indices_;
           typename pcl::PointCloud<ModelT>::Ptr cloud_;
           typename pcl::PointCloud<ModelT>::Ptr complete_cloud_;
-          int bad_information_;
+          index_t bad_information_;
           float outliers_weight_;
           pcl::PointCloud<pcl::Normal>::Ptr normals_;
-          int id_;
+          index_t id_;
       };
 
       using RecognitionModelPtr = std::shared_ptr<RecognitionModel>;
@@ -78,7 +78,7 @@ namespace pcl
             cost_ = s.cost_;
           }
 
-          mets::gol_type what_if(int /*index*/, bool /*val*/) const
+          mets::gol_type what_if(index_t /*index*/, bool /*val*/) const
           {
             /*std::vector<bool> tmp (solution_);
             tmp[index] = val;
@@ -87,7 +87,7 @@ namespace pcl
             return static_cast<mets::gol_type>(0);
           }
 
-          mets::gol_type apply_and_evaluate(int index, bool val)
+          mets::gol_type apply_and_evaluate(index_t index, bool val)
           {
             solution_[index] = val;
             mets::gol_type sol = opt_->evaluateSolution (solution_, index); //this will update the state of the solution
@@ -95,12 +95,12 @@ namespace pcl
             return sol;
           }
 
-          void apply(int /*index*/, bool /*val*/)
+          void apply(index_t /*index*/, bool /*val*/)
           {
 
           }
 
-          void unapply(int index, bool val)
+          void unapply(index_t index, bool val)
           {
             solution_[index] = val;
             //update optimizer solution
@@ -123,9 +123,9 @@ namespace pcl
 
       class move: public mets::move
       {
-          int index_;
+          index_t index_;
         public:
-          move(int i) :
+          move(index_t i) :
               index_ (i)
           {
           }
@@ -166,9 +166,9 @@ namespace pcl
             return moves_m.end ();
           }
 
-          move_manager(int problem_size)
+          move_manager(index_t problem_size)
           {
-            for (int ii = 0; ii != problem_size; ++ii)
+            for (index_t ii = 0; ii != problem_size; ++ii)
               moves_m.push_back (new move (ii));
           }
 
@@ -200,11 +200,11 @@ namespace pcl
       pcl::PointCloud<pcl::Normal>::Ptr scene_normals_;
       pcl::PointCloud<pcl::PointXYZI>::Ptr clusters_cloud_;
 
-      std::vector<int> complete_cloud_occupancy_by_RM_;
+      std::vector<index_t> complete_cloud_occupancy_by_RM_;
       float res_occupancy_grid_;
       float w_occupied_multiple_cm_;
 
-      std::vector<int> explained_by_RM_; //represents the points of scene_cloud_ that are explained by the recognition models
+      std::vector<index_t> explained_by_RM_; //represents the points of scene_cloud_ that are explained by the recognition models
       std::vector<float> explained_by_RM_distance_weighted; //represents the points of scene_cloud_ that are explained by the recognition models
       std::vector<float> unexplained_by_RM_neighboorhods; //represents the points of scene_cloud_ that are not explained by the active hypotheses in the neighboorhod of the recognition models
       std::vector<RecognitionModelPtr> recognition_models_;
@@ -217,8 +217,8 @@ namespace pcl
       float radius_normals_;
 
       float previous_explained_value;
-      int previous_duplicity_;
-      int previous_duplicity_complete_models_;
+      index_t previous_duplicity_;
+      index_t previous_duplicity_complete_models_;
       float previous_bad_info_;
       float previous_unexplained_;
 
@@ -226,8 +226,8 @@ namespace pcl
       SAModel best_seen_;
       float initial_temp_;
 
-      int n_cc_;
-      std::vector<std::vector<int> > cc_;
+      index_t n_cc_;
+      std::vector<std::vector<index_t> > cc_;
 
       void setPreviousBadInfo(float f)
       {
@@ -244,12 +244,12 @@ namespace pcl
         previous_explained_value = v;
       }
 
-      void setPreviousDuplicity(int v)
+      void setPreviousDuplicity(index_t v)
       {
         previous_duplicity_ = v;
       }
 
-      void setPreviousDuplicityCM(int v)
+      void setPreviousDuplicityCM(index_t v)
       {
         previous_duplicity_complete_models_ = v;
       }
@@ -269,18 +269,18 @@ namespace pcl
         return previous_explained_value;
       }
 
-      int getDuplicity()
+      index_t getDuplicity()
       {
         return previous_duplicity_;
       }
 
-      int getDuplicityCM()
+      index_t getDuplicityCM()
       {
         return previous_duplicity_complete_models_;
       }
 
-      void updateUnexplainedVector(std::vector<int> & unexplained_, std::vector<float> & unexplained_distances, std::vector<float> & unexplained_by_RM,
-          std::vector<int> & explained, std::vector<int> & explained_by_RM, float val)
+      void updateUnexplainedVector(std::vector<index_t> & unexplained_, std::vector<float> & unexplained_distances, std::vector<float> & unexplained_by_RM,
+          std::vector<index_t> & explained, std::vector<index_t> & explained_by_RM, float val)
       {
         {
 
@@ -306,7 +306,7 @@ namespace pcl
             }
           }
 
-          for (const int &i : explained)
+          for (const index_t &i : explained)
           {
             if (val < 0)
             {
@@ -330,24 +330,24 @@ namespace pcl
         }
       }
 
-      void updateExplainedVector(std::vector<int> & vec, std::vector<float> & vec_float, std::vector<int> & explained_,
+      void updateExplainedVector(std::vector<index_t> & vec, std::vector<float> & vec_float, std::vector<index_t> & explained_,
           std::vector<float> & explained_by_RM_distance_weighted, float sign)
       {
         float add_to_explained = 0.f;
-        int add_to_duplicity_ = 0;
+        index_t add_to_duplicity_ = 0;
 
         for (std::size_t i = 0; i < vec.size (); i++)
         {
           bool prev_dup = explained_[vec[i]] > 1;
 
-          explained_[vec[i]] += static_cast<int> (sign);
+          explained_[vec[i]] += static_cast<index_t> (sign);
           explained_by_RM_distance_weighted[vec[i]] += vec_float[i] * sign;
 
           add_to_explained += vec_float[i] * sign;
 
           if ((explained_[vec[i]] > 1) && prev_dup)
           { //its still a duplicate, we are adding
-            add_to_duplicity_ += static_cast<int> (sign); //so, just add or remove one
+            add_to_duplicity_ += static_cast<index_t> (sign); //so, just add or remove one
           } else if ((explained_[vec[i]] == 1) && prev_dup)
           { //if was duplicate before, now its not, remove 2, we are removing the hypothesis
             add_to_duplicity_ -= 2;
@@ -362,15 +362,15 @@ namespace pcl
         previous_duplicity_ += add_to_duplicity_;
       }
 
-      void updateCMDuplicity(std::vector<int> & vec, std::vector<int> & occupancy_vec, float sign) {
-        int add_to_duplicity_ = 0;
-        for (const int &i : vec)
+      void updateCMDuplicity(std::vector<index_t> & vec, std::vector<index_t> & occupancy_vec, float sign) {
+        index_t add_to_duplicity_ = 0;
+        for (const index_t &i : vec)
         {
           bool prev_dup = occupancy_vec[i] > 1;
-          occupancy_vec[i] += static_cast<int> (sign);
+          occupancy_vec[i] += static_cast<index_t> (sign);
           if ((occupancy_vec[i] > 1) && prev_dup)
           { //its still a duplicate, we are adding
-            add_to_duplicity_ += static_cast<int> (sign); //so, just add or remove one
+            add_to_duplicity_ += static_cast<index_t> (sign); //so, just add or remove one
           } else if ((occupancy_vec[i] == 1) && prev_dup)
           { //if was duplicate before, now its not, remove 2, we are removing the hypothesis
             add_to_duplicity_ -= 2;
@@ -383,10 +383,10 @@ namespace pcl
         previous_duplicity_complete_models_ += add_to_duplicity_;
       }
 
-      float getTotalExplainedInformation(std::vector<int> & explained_, std::vector<float> & explained_by_RM_distance_weighted, int * duplicity_)
+      float getTotalExplainedInformation(std::vector<index_t> & explained_, std::vector<float> & explained_by_RM_distance_weighted, index_t * duplicity_)
       {
         float explained_info = 0;
-        int duplicity = 0;
+        index_t duplicity = 0;
 
         for (std::size_t i = 0; i < explained_.size (); i++)
         {
@@ -411,7 +411,7 @@ namespace pcl
         return bad_info;
       }
 
-      float getUnexplainedInformationInNeighborhood(std::vector<float> & unexplained, std::vector<int> & explained)
+      float getUnexplainedInformationInNeighborhood(std::vector<float> & unexplained, std::vector<index_t> & explained)
       {
         float unexplained_sum = 0.f;
         for (std::size_t i = 0; i < unexplained.size (); i++)
@@ -428,7 +428,7 @@ namespace pcl
       initialize();
 
       mets::gol_type
-      evaluateSolution(const std::vector<bool> & active, int changed);
+      evaluateSolution(const std::vector<bool> & active, index_t changed);
 
       bool
       addModel(typename pcl::PointCloud<ModelT>::ConstPtr & model, typename pcl::PointCloud<ModelT>::ConstPtr & complete_model, RecognitionModelPtr & recog_model);
@@ -437,7 +437,7 @@ namespace pcl
       computeClutterCue(RecognitionModelPtr & recog_model);
 
       void
-      SAOptimize(std::vector<int> & cc_indices, std::vector<bool> & sub_solution);
+      SAOptimize(std::vector<index_t> & cc_indices, std::vector<bool> & sub_solution);
 
     public:
       GlobalHypothesesVerification() : HypothesisVerification<ModelT, SceneT>()

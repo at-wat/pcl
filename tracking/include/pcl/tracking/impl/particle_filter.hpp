@@ -40,7 +40,7 @@ ParticleFilterTracker<PointInT, StateT>::initCompute()
 template <typename PointInT, typename StateT>
 int
 ParticleFilterTracker<PointInT, StateT>::sampleWithReplacement(
-    const std::vector<int>& a, const std::vector<double>& q)
+    const std::vector<index_t>& a, const std::vector<double>& q)
 {
   static std::mt19937 rng{std::random_device{}()};
   std::uniform_real_distribution<> rd(0.0, 1.0);
@@ -56,29 +56,29 @@ ParticleFilterTracker<PointInT, StateT>::sampleWithReplacement(
 template <typename PointInT, typename StateT>
 void
 ParticleFilterTracker<PointInT, StateT>::genAliasTable(
-    std::vector<int>& a,
+    std::vector<index_t>& a,
     std::vector<double>& q,
     const PointCloudStateConstPtr& particles)
 {
   /* generate an alias table, a and q */
-  std::vector<int> HL(particles->size());
-  std::vector<int>::iterator H = HL.begin();
-  std::vector<int>::iterator L = HL.end() - 1;
+  std::vector<index_t> HL(particles->size());
+  std::vector<index_t>::iterator H = HL.begin();
+  std::vector<index_t>::iterator L = HL.end() - 1;
   const auto num = particles->size();
   for (std::size_t i = 0; i < num; i++)
     q[i] = (*particles)[i].weight * static_cast<float>(num);
   for (std::size_t i = 0; i < num; i++)
-    a[i] = static_cast<int>(i);
+    a[i] = static_cast<index_t>(i);
   // setup H and L
   for (std::size_t i = 0; i < num; i++)
     if (q[i] >= 1.0)
-      *H++ = static_cast<int>(i);
+      *H++ = static_cast<index_t>(i);
     else
-      *L-- = static_cast<int>(i);
+      *L-- = static_cast<index_t>(i);
 
   while (H != HL.begin() && L != HL.end() - 1) {
-    int j = *(L + 1);
-    int k = *(H - 1);
+    index_t j = *(L + 1);
+    index_t k = *(H - 1);
     a[j] = k;
     q[k] += q[j] - 1;
     ++L;
@@ -220,7 +220,7 @@ ParticleFilterTracker<PointInT, StateT>::testChangeDetection(
 {
   change_detector_->setInputCloud(input);
   change_detector_->addPointsFromInputCloud();
-  std::vector<int> newPointIdxVector;
+  std::vector<index_t> newPointIdxVector;
   change_detector_->getPointIndicesFromNewVoxels(newPointIdxVector,
                                                  change_detector_filter_);
   change_detector_->switchBuffers();
@@ -250,7 +250,7 @@ ParticleFilterTracker<PointInT, StateT>::weight()
   }
   else {
     for (std::size_t i = 0; i < particles_->size(); i++) {
-      IndicesPtr indices(new std::vector<int>);
+      IndicesPtr indices(new std::vector<index_t>);
       computeTransformedPointCloudWithNormal(
           (*particles_)[i], *indices, *transed_reference_vector_[i]);
     }
@@ -261,7 +261,7 @@ ParticleFilterTracker<PointInT, StateT>::weight()
     coherence_->setTargetCloud(coherence_input);
     coherence_->initCompute();
     for (std::size_t i = 0; i < particles_->size(); i++) {
-      IndicesPtr indices(new std::vector<int>);
+      IndicesPtr indices(new std::vector<index_t>);
       coherence_->compute(
           transed_reference_vector_[i], indices, (*particles_)[i].weight);
     }
@@ -273,7 +273,7 @@ ParticleFilterTracker<PointInT, StateT>::weight()
 template <typename PointInT, typename StateT>
 void
 ParticleFilterTracker<PointInT, StateT>::computeTransformedPointCloud(
-    const StateT& hypothesis, std::vector<int>& indices, PointCloudIn& cloud)
+    const StateT& hypothesis, std::vector<index_t>& indices, PointCloudIn& cloud)
 {
   if (use_normal_)
     computeTransformedPointCloudWithNormal(hypothesis, indices, cloud);
@@ -296,9 +296,9 @@ template <typename PointInT, typename StateT>
 void
 ParticleFilterTracker<PointInT, StateT>::computeTransformedPointCloudWithNormal(
 #ifdef PCL_TRACKING_NORMAL_SUPPORTED
-    const StateT& hypothesis, std::vector<int>& indices, PointCloudIn& cloud)
+    const StateT& hypothesis, std::vector<index_t>& indices, PointCloudIn& cloud)
 #else
-    const StateT&, std::vector<int>&, PointCloudIn&)
+    const StateT&, std::vector<index_t>&, PointCloudIn&)
 #endif
 {
 #ifdef PCL_TRACKING_NORMAL_SUPPORTED
@@ -336,7 +336,7 @@ template <typename PointInT, typename StateT>
 void
 ParticleFilterTracker<PointInT, StateT>::resampleWithReplacement()
 {
-  std::vector<int> a(particles_->size());
+  std::vector<index_t> a(particles_->size());
   std::vector<double> q(particles_->size());
   genAliasTable(a, q, particles_);
 

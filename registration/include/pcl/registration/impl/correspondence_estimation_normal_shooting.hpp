@@ -73,7 +73,7 @@ CorrespondenceEstimationNormalShooting<PointSource, PointTarget, NormalT, Scalar
 
   correspondences.resize(indices_->size());
 
-  std::vector<int> nn_indices(k_);
+  std::vector<index_t> nn_indices(k_);
   std::vector<float> nn_dists(k_);
 
   int min_index = 0;
@@ -111,7 +111,7 @@ CorrespondenceEstimationNormalShooting<PointSource, PointTarget, NormalT, Scalar
         double dist = C.dot(C);
         if (dist < min_dist) {
           min_dist = dist;
-          min_index = static_cast<int>(j);
+          min_index = static_cast<index_t>(j);
         }
       }
       if (min_dist > max_distance)
@@ -156,7 +156,7 @@ CorrespondenceEstimationNormalShooting<PointSource, PointTarget, NormalT, Scalar
         double dist = C.dot(C);
         if (dist < min_dist) {
           min_dist = dist;
-          min_index = static_cast<int>(j);
+          min_index = static_cast<index_t>(j);
         }
       }
       if (min_dist > max_distance)
@@ -188,9 +188,9 @@ CorrespondenceEstimationNormalShooting<PointSource, PointTarget, NormalT, Scalar
 
   correspondences.resize(indices_->size());
 
-  std::vector<int> nn_indices(k_);
+  std::vector<index_t> nn_indices(k_);
   std::vector<float> nn_dists(k_);
-  std::vector<int> index_reciprocal(1);
+  std::vector<index_t> index_reciprocal(1);
   std::vector<float> distance_reciprocal(1);
 
   int min_index = 0;
@@ -229,7 +229,7 @@ CorrespondenceEstimationNormalShooting<PointSource, PointTarget, NormalT, Scalar
         double dist = C.dot(C);
         if (dist < min_dist) {
           min_dist = dist;
-          min_index = static_cast<int>(j);
+          min_index = static_cast<index_t>(j);
         }
       }
       if (min_dist > max_distance)
@@ -283,7 +283,7 @@ CorrespondenceEstimationNormalShooting<PointSource, PointTarget, NormalT, Scalar
         double dist = C.dot(C);
         if (dist < min_dist) {
           min_dist = dist;
-          min_index = static_cast<int>(j);
+          min_index = static_cast<index_t>(j);
         }
       }
       if (min_dist > max_distance)

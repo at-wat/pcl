@@ -65,22 +65,22 @@ inline void extractEuclideanClustersSmooth(const typename pcl::PointCloud<PointT
   // Create a bool vector of processed point indices, and initialize it to false
   std::vector<bool> processed (cloud.size (), false);
 
-  std::vector<int> nn_indices;
+  std::vector<pcl::index_t> nn_indices;
   std::vector<float> nn_distances;
   // Process all points in the indices vector
-  int size = static_cast<int> (cloud.size ());
-  for (int i = 0; i < size; ++i)
+  pcl::index_t size = static_cast<pcl::index_t> (cloud.size ());
+  for (pcl::index_t i = 0; i < size; ++i)
   {
     if (processed[i])
       continue;
 
     std::vector<unsigned int> seed_queue;
-    int sq_idx = 0;
+    pcl::index_t sq_idx = 0;
     seed_queue.push_back (i);
 
     processed[i] = true;
 
-    while (sq_idx < static_cast<int> (seed_queue.size ()))
+    while (sq_idx < static_cast<pcl::index_t> (seed_queue.size ()))
     {
 
       if (normals[seed_queue[sq_idx]].curvature > curvature_threshold)
@@ -141,7 +141,7 @@ inline void extractEuclideanClustersSmooth(const typename pcl::PointCloud<PointT
 }
 
 template<typename ModelT, typename SceneT>
-mets::gol_type pcl::GlobalHypothesesVerification<ModelT, SceneT>::evaluateSolution(const std::vector<bool> & active, int changed)
+mets::gol_type pcl::GlobalHypothesesVerification<ModelT, SceneT>::evaluateSolution(const std::vector<bool> & active, pcl::index_t changed)
 {
   float sign = 1.f;
   //update explained_by_RM
@@ -164,7 +164,7 @@ mets::gol_type pcl::GlobalHypothesesVerification<ModelT, SceneT>::evaluateSoluti
     sign = -1.f;
   }
 
-  int duplicity = getDuplicity ();
+  pcl::index_t duplicity = getDuplicity ();
   float good_info = getExplainedValue ();
 
   float unexplained_info = getPreviousUnexplainedValue ();
@@ -173,7 +173,7 @@ mets::gol_type pcl::GlobalHypothesesVerification<ModelT, SceneT>::evaluateSoluti
 
   setPreviousBadInfo (bad_info);
 
-  int n_active_hyp = 0;
+  pcl::index_t n_active_hyp = 0;
   for(const bool i : active) {
     if(i)
       n_active_hyp++;
@@ -215,7 +215,7 @@ void pcl::GlobalHypothesesVerification<ModelT, SceneT>::initialize()
   n3d.compute (*scene_normals_);
 
   //check nans...
-  int j = 0;
+  index_t j = 0;
   for (std::size_t i = 0; i < scene_normals_->size (); ++i)
   {
     if (!std::isfinite ((*scene_normals_)[i].normal_x) || !std::isfinite ((*scene_normals_)[i].normal_y)
@@ -285,8 +285,8 @@ void pcl::GlobalHypothesesVerification<ModelT, SceneT>::initialize()
   {
     pcl::ScopeTime tcues ("Computing cues");
     recognition_models_.resize (complete_models_.size ());
-    int valid = 0;
-    for (int i = 0; i < static_cast<int> (complete_models_.size ()); i++)
+    index_t valid = 0;
+    for (index_t i = 0; i < static_cast<index_t> (complete_models_.size ()); i++)
     {
       //create recognition model
       recognition_models_[valid].reset (new RecognitionModel ());
@@ -328,26 +328,26 @@ void pcl::GlobalHypothesesVerification<ModelT, SceneT>::initialize()
       max_pt_all.z = max_pt.z;
   }
 
-  int size_x, size_y, size_z;
-  size_x = static_cast<int> (std::ceil (std::abs (max_pt_all.x - min_pt_all.x) / res_occupancy_grid_)) + 1;
-  size_y = static_cast<int> (std::ceil (std::abs (max_pt_all.y - min_pt_all.y) / res_occupancy_grid_)) + 1;
-  size_z = static_cast<int> (std::ceil (std::abs (max_pt_all.z - min_pt_all.z) / res_occupancy_grid_)) + 1;
+  index_t size_x, size_y, size_z;
+  size_x = static_cast<index_t> (std::ceil (std::abs (max_pt_all.x - min_pt_all.x) / res_occupancy_grid_)) + 1;
+  size_y = static_cast<index_t> (std::ceil (std::abs (max_pt_all.y - min_pt_all.y) / res_occupancy_grid_)) + 1;
+  size_z = static_cast<index_t> (std::ceil (std::abs (max_pt_all.z - min_pt_all.z) / res_occupancy_grid_)) + 1;
 
   complete_cloud_occupancy_by_RM_.resize (size_x * size_y * size_z, 0);
 
   for (std::size_t i = 0; i < recognition_models_.size (); i++)
   {
 
-    std::map<int, bool> banned;
-    std::map<int, bool>::iterator banned_it;
+    std::map<index_t, bool> banned;
+    std::map<index_t, bool>::iterator banned_it;
 
     for (const auto& point: *complete_models_[indices_[i]])
     {
-      const int pos_x = static_cast<int> (std::floor ((point.x - min_pt_all.x) / res_occupancy_grid_));
-      const int pos_y = static_cast<int> (std::floor ((point.y - min_pt_all.y) / res_occupancy_grid_));
-      const int pos_z = static_cast<int> (std::floor ((point.z - min_pt_all.z) / res_occupancy_grid_));
+      const index_t pos_x = static_cast<index_t> (std::floor ((point.x - min_pt_all.x) / res_occupancy_grid_));
+      const index_t pos_y = static_cast<index_t> (std::floor ((point.y - min_pt_all.y) / res_occupancy_grid_));
+      const index_t pos_z = static_cast<index_t> (std::floor ((point.z - min_pt_all.z) / res_occupancy_grid_));
 
-      const int idx = pos_z * size_x * size_y + pos_y * size_x + pos_x;
+      const index_t idx = pos_z * size_x * size_y + pos_y * size_x + pos_x;
       banned_it = banned.find (idx);
       if (banned_it == banned.end ())
       {
@@ -364,7 +364,7 @@ void pcl::GlobalHypothesesVerification<ModelT, SceneT>::initialize()
   default(none) \
   schedule(dynamic, 4) \
   num_threads(omp_get_num_procs())
-    for (int j = 0; j < static_cast<int> (recognition_models_.size ()); j++)
+    for (index_t j = 0; j < static_cast<index_t> (recognition_models_.size ()); j++)
       computeClutterCue (recognition_models_[j]);
   }
 
@@ -372,12 +372,12 @@ void pcl::GlobalHypothesesVerification<ModelT, SceneT>::initialize()
   n_cc_ = 1;
   cc_.resize (n_cc_);
   for (std::size_t i = 0; i < recognition_models_.size (); i++)
-    cc_[0].push_back (static_cast<int> (i));
+    cc_[0].push_back (static_cast<index_t> (i));
 
 }
 
 template<typename ModelT, typename SceneT>
-void pcl::GlobalHypothesesVerification<ModelT, SceneT>::SAOptimize(std::vector<int> & cc_indices, std::vector<bool> & initial_solution)
+void pcl::GlobalHypothesesVerification<ModelT, SceneT>::SAOptimize(std::vector<index_t> & cc_indices, std::vector<bool> & initial_solution)
 {
 
   //temporal copy of recogniton_models_
@@ -386,7 +386,7 @@ void pcl::GlobalHypothesesVerification<ModelT, SceneT>::SAOptimize(std::vector<i
 
   recognition_models_.clear ();
 
-  for (const int &cc_index : cc_indices)
+  for (const index_t &cc_index : cc_indices)
   {
     recognition_models_.push_back (recognition_models_copy[cc_index]);
   }
@@ -409,7 +409,7 @@ void pcl::GlobalHypothesesVerification<ModelT, SceneT>::SAOptimize(std::vector<i
     }
   }
 
-  int occupied_multiple = 0;
+  index_t occupied_multiple = 0;
   for(std::size_t i=0; i < complete_cloud_occupancy_by_RM_.size(); i++) {
     if(complete_cloud_occupancy_by_RM_[i] > 1) {
       occupied_multiple+=complete_cloud_occupancy_by_RM_[i];
@@ -420,7 +420,7 @@ void pcl::GlobalHypothesesVerification<ModelT, SceneT>::SAOptimize(std::vector<i
   //do optimization
   //Define model SAModel, initial solution is all models activated
 
-  int duplicity;
+  index_t duplicity;
   float good_information_ = getTotalExplainedInformation (explained_by_RM_, explained_by_RM_distance_weighted, &duplicity);
   float bad_information_ = 0;
   float unexplained_in_neighboorhod = getUnexplainedInformationInNeighborhood (unexplained_by_RM_neighboorhods, explained_by_RM_);
@@ -447,7 +447,7 @@ void pcl::GlobalHypothesesVerification<ModelT, SceneT>::SAOptimize(std::vector<i
   model.setOptimizer (this);
   SAModel best (model);
 
-  move_manager neigh (static_cast<int> (cc_indices.size ()));
+  move_manager neigh (static_cast<index_t> (cc_indices.size ()));
 
   mets::best_ever_solution best_recorder (best);
   mets::noimprove_termination_criteria noimprove (max_iterations_);
@@ -477,7 +477,7 @@ void pcl::GlobalHypothesesVerification<ModelT, SceneT>::verify()
   initialize ();
 
   //for each connected component, find the optimal solution
-  for (int c = 0; c < n_cc_; c++)
+  for (index_t c = 0; c < n_cc_; c++)
   {
     //TODO: Check for trivial case...
     //TODO: Check also the number of hypotheses and use exhaustive enumeration if smaller than 10
@@ -511,7 +511,7 @@ bool pcl::GlobalHypothesesVerification<ModelT, SceneT>::addModel(typename pcl::P
 
   {
     //check nans...
-    int j = 0;
+    index_t j = 0;
     for (auto& point: *(recog_model->cloud_))
     {
       if (!isXYZFinite (point))
@@ -543,7 +543,7 @@ bool pcl::GlobalHypothesesVerification<ModelT, SceneT>::addModel(typename pcl::P
   n3d.compute (*(recog_model->normals_));
 
   //check nans...
-  int j = 0;
+  index_t j = 0;
   for (std::size_t i = 0; i < recog_model->normals_->size (); ++i)
   {
     if (isNormalFinite((*recog_model->normals_)[i]))
@@ -562,14 +562,14 @@ bool pcl::GlobalHypothesesVerification<ModelT, SceneT>::addModel(typename pcl::P
   recog_model->cloud_->width = j;
   recog_model->cloud_->height = 1;
 
-  std::vector<int> explained_indices;
+  std::vector<index_t> explained_indices;
   std::vector<float> outliers_weight;
   std::vector<float> explained_indices_distances;
 
-  std::vector<int> nn_indices;
+  std::vector<index_t> nn_indices;
   std::vector<float> nn_distances;
 
-  std::map<int, std::shared_ptr<std::vector<std::pair<int, float>>>> model_explains_scene_points; //which point i from the scene is explained by a points j_k with dist d_k from the model
+  std::map<index_t, std::shared_ptr<std::vector<std::pair<index_t, float>>>> model_explains_scene_points; //which point i from the scene is explained by a points j_k with dist d_k from the model
 
   outliers_weight.resize (recog_model->cloud_->size ());
   recog_model->outlier_indices_.resize (recog_model->cloud_->size ());
@@ -581,17 +581,17 @@ bool pcl::GlobalHypothesesVerification<ModelT, SceneT>::addModel(typename pcl::P
     {
       //outlier
       outliers_weight[o] = regularizer_;
-      recog_model->outlier_indices_[o] = static_cast<int> (i);
+      recog_model->outlier_indices_[o] = static_cast<index_t> (i);
       o++;
     } else
     {
       for (std::size_t k = 0; k < nn_distances.size (); k++)
       {
-        std::pair<int, float> pair = std::make_pair (i, nn_distances[k]); //i is a index to a model point and then distance
+        std::pair<index_t, float> pair = std::make_pair (i, nn_distances[k]); //i is a index to a model point and then distance
         auto it = model_explains_scene_points.find (nn_indices[k]);
         if (it == model_explains_scene_points.end ())
         {
-          std::shared_ptr<std::vector<std::pair<int, float>>> vec (new std::vector<std::pair<int, float>> ());
+          std::shared_ptr<std::vector<std::pair<index_t, float>>> vec (new std::vector<std::pair<index_t, float>> ());
           vec->push_back (pair);
           model_explains_scene_points[nn_indices[k]] = vec;
         } else
@@ -609,7 +609,7 @@ bool pcl::GlobalHypothesesVerification<ModelT, SceneT>::addModel(typename pcl::P
   if (outliers_weight.empty ())
     recog_model->outliers_weight_ = 1.f;
 
-  pcl::IndicesPtr indices_scene (new std::vector<int>);
+  pcl::IndicesPtr indices_scene (new std::vector<index_t>);
   //go through the map and keep the closest model point in case that several model points explain a scene point
 
   int p = 0;
@@ -645,7 +645,7 @@ bool pcl::GlobalHypothesesVerification<ModelT, SceneT>::addModel(typename pcl::P
 
   }
 
-  recog_model->bad_information_ = static_cast<int> (recog_model->outlier_indices_.size ());
+  recog_model->bad_information_ = static_cast<index_t> (recog_model->outlier_indices_.size ());
   recog_model->explained_ = explained_indices;
   recog_model->explained_distances_ = explained_indices_distances;
 
@@ -659,11 +659,11 @@ void pcl::GlobalHypothesesVerification<ModelT, SceneT>::computeClutterCue(Recogn
   {
 
     float rn_sqr = radius_neighborhood_GO_ * radius_neighborhood_GO_;
-    std::vector<int> nn_indices;
+    std::vector<index_t> nn_indices;
     std::vector<float> nn_distances;
 
-    std::vector < std::pair<int, int> > neighborhood_indices; //first is indices to scene point and second is indices to explained_ scene points
-    for (int i = 0; i < static_cast<int> (recog_model->explained_.size ()); i++)
+    std::vector < std::pair<index_t, index_t> > neighborhood_indices; //first is indices to scene point and second is indices to explained_ scene points
+    for (index_t i = 0; i < static_cast<index_t> (recog_model->explained_.size ()); i++)
     {
       if (scene_downsampled_tree_->radiusSearch ((*scene_cloud_downsampled_)[recog_model->explained_[i]], radius_neighborhood_GO_, nn_indices,
           nn_distances, std::numeric_limits<int>::max ()))
@@ -686,7 +686,7 @@ void pcl::GlobalHypothesesVerification<ModelT, SceneT>::computeClutterCue(Recogn
             [] (const auto& p1, const auto& p2) { return p1.first == p2.first; }), neighborhood_indices.end ());
 
     //sort explained points
-    std::vector<int> exp_idces (recog_model->explained_);
+    std::vector<index_t> exp_idces (recog_model->explained_);
     std::sort (exp_idces.begin (), exp_idces.end ());
 
     recog_model->unexplained_in_neighborhood.resize (neighborhood_indices.size ());
