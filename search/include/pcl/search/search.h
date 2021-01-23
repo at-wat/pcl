@@ -142,7 +142,7 @@ namespace pcl
           * a priori!)
           * \return number of neighbors found
           */
-        virtual int
+        virtual index_t
         nearestKSearch (const PointT &point, int k, Indices &k_indices,
                         std::vector<float> &k_sqr_distances) const = 0;
 
@@ -155,7 +155,7 @@ namespace pcl
           * a priori!)
           * \return number of neighbors found
           */
-        template <typename PointTDiff> inline int
+        template <typename PointTDiff> inline index_t
         nearestKSearchT (const PointTDiff &point, int k,
                          Indices &k_indices, std::vector<float> &k_sqr_distances) const
         {
@@ -180,7 +180,7 @@ namespace pcl
           *
           * \exception asserts in debug mode if the index is not between 0 and the maximum number of points
           */
-        virtual int
+        virtual index_t
         nearestKSearch (const PointCloud &cloud, index_t index, int k,
                         Indices &k_indices,
                         std::vector<float> &k_sqr_distances) const;
@@ -202,7 +202,7 @@ namespace pcl
           *
           * \exception asserts in debug mode if the index is not between 0 and the maximum number of points
           */
-        virtual int
+        virtual index_t
         nearestKSearch (index_t index, int k,
                         Indices &k_indices,
                         std::vector<float> &k_sqr_distances) const;
@@ -269,7 +269,7 @@ namespace pcl
           * returned.
           * \return number of neighbors found in radius
           */
-        virtual int
+        virtual index_t
         radiusSearch (const PointT& point, double radius, Indices& k_indices,
                       std::vector<float>& k_sqr_distances, unsigned int max_nn = 0) const = 0;
 
@@ -283,7 +283,7 @@ namespace pcl
           * returned.
           * \return number of neighbors found in radius
           */
-        template <typename PointTDiff> inline int
+        template <typename PointTDiff> inline index_t
         radiusSearchT (const PointTDiff &point, double radius, Indices &k_indices,
                        std::vector<float> &k_sqr_distances, unsigned int max_nn = 0) const
         {
@@ -309,7 +309,7 @@ namespace pcl
           *
           * \exception asserts in debug mode if the index is not between 0 and the maximum number of points
           */
-        virtual int
+        virtual index_t
         radiusSearch (const PointCloud &cloud, index_t index, double radius,
                       Indices &k_indices, std::vector<float> &k_sqr_distances,
                       unsigned int max_nn = 0) const;
@@ -333,7 +333,7 @@ namespace pcl
           *
           * \exception asserts in debug mode if the index is not between 0 and the maximum number of points
           */
-        virtual int
+        virtual index_t
         radiusSearch (index_t index, double radius, Indices &k_indices,
                       std::vector<float> &k_sqr_distances, unsigned int max_nn = 0) const;
 

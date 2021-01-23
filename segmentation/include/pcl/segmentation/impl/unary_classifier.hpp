@@ -75,7 +75,7 @@ pcl::UnaryClassifier<PointT>::setInputCloud (typename pcl::PointCloud<PointT>::P
   pcl::PointCloud <PointT> point;
   std::vector<pcl::PCLPointField> fields;
 
-  int label_index = -1;
+  index_t label_index = -1;
   label_index = pcl::getFieldIndex<PointT> ("label", fields);
   
   if (label_index != -1)
@@ -133,11 +133,11 @@ pcl::UnaryClassifier<PointT>::convertCloud (typename pcl::PointCloud<PointT>::Pt
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 template <typename PointT> void
 pcl::UnaryClassifier<PointT>::findClusters (typename pcl::PointCloud<PointT>::Ptr in,
-                                            std::vector<int> &cluster_numbers)
+                                            std::vector<index_t> &cluster_numbers)
 {
   // find the 'label' field index
   std::vector <pcl::PCLPointField> fields;
-  int label_idx = -1;
+  index_t label_idx = -1;
   pcl::PointCloud <PointT> point;
   label_idx = pcl::getFieldIndex<PointT> ("label", fields);
 
@@ -151,7 +151,7 @@ pcl::UnaryClassifier<PointT>::findClusters (typename pcl::PointCloud<PointT>::Pt
 
       // check if label exist
       bool exist = false;
-      for (const int &cluster_number : cluster_numbers)
+      for (const index_t &cluster_number : cluster_numbers)
       {
         if (static_cast<std::uint32_t> (cluster_number) == label)
         {
@@ -173,7 +173,7 @@ pcl::UnaryClassifier<PointT>::getCloudWithLabel (typename pcl::PointCloud<PointT
 {
   // find the 'label' field index
   std::vector <pcl::PCLPointField> fields;
-  int label_idx = -1;
+  index_t label_idx = -1;
   pcl::PointCloud <PointT> point;
   label_idx = pcl::getFieldIndex<PointT> ("label", fields);
 
@@ -273,7 +273,7 @@ pcl::UnaryClassifier<PointT>::kmeansClustering (pcl::PointCloud<pcl::FPFHSignatu
 template <typename PointT> void
 pcl::UnaryClassifier<PointT>::queryFeatureDistances (std::vector<pcl::PointCloud<pcl::FPFHSignature33>::Ptr> &trained_features,
                                                      pcl::PointCloud<pcl::FPFHSignature33>::Ptr query_features,
-                                                     std::vector<int> &indi,
+                                                     std::vector<index_t> &indi,
                                                      std::vector<float> &dist)
 {
   // estimate the total number of row's needed
@@ -311,7 +311,7 @@ pcl::UnaryClassifier<PointT>::queryFeatureDistances (std::vector<pcl::PointCloud
     flann::Matrix<float> p = flann::Matrix<float>(new float[n_col], 1, n_col);
     memcpy (&p.ptr ()[0], (*query_features)[i].histogram, p.cols * p.rows * sizeof (float));
 
-    flann::Matrix<int> indices (new int[k], 1, k);
+    flann::Matrix<index_t> indices (new index_t[k], 1, k);
     flann::Matrix<float> distances (new float[k], 1, k);  
     index->knnSearch (p, indices, distances, k, flann::SearchParams (512));
 
@@ -328,7 +328,7 @@ pcl::UnaryClassifier<PointT>::queryFeatureDistances (std::vector<pcl::PointCloud
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 template <typename PointT> void
-pcl::UnaryClassifier<PointT>::assignLabels (std::vector<int> &indi,
+pcl::UnaryClassifier<PointT>::assignLabels (std::vector<index_t> &indi,
                                             std::vector<float> &dist,
                                             int n_feature_means,
                                             float feature_threshold,
@@ -376,14 +376,14 @@ pcl::UnaryClassifier<PointT>::trainWithLabel (
     std::vector<pcl::PointCloud<pcl::FPFHSignature33>, Eigen::aligned_allocator<pcl::PointCloud<pcl::FPFHSignature33> > > &output)
 {
   // find clusters
-  std::vector<int> cluster_numbers;
+  std::vector<index_t> cluster_numbers;
   findClusters (input_cloud_, cluster_numbers);
   std::cout << "cluster numbers: ";
-  for (const int &cluster_number : cluster_numbers)
+  for (const index_t &cluster_number : cluster_numbers)
     std::cout << cluster_number << " ";
   std::cout << std::endl;
 
-  for (const int &cluster_number : cluster_numbers)
+  for (const index_t &cluster_number : cluster_numbers)
   {    
     // extract all points with the same label number
     pcl::PointCloud<pcl::PointXYZ>::Ptr label_cloud (new pcl::PointCloud<pcl::PointXYZ>);

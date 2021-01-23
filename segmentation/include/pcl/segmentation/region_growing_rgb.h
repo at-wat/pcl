@@ -130,7 +130,7 @@ namespace pcl
       /** \brief Returns the number of nearest neighbours used for searching K nearest segments.
         * Note that here it refers to the segments(not the points).
         */
-      unsigned int
+      uindex_t
       getNumberOfRegionNeighbours () const;
 
       /** \brief This method allows to set the number of neighbours that is used for finding
@@ -138,7 +138,7 @@ namespace pcl
         * \param[in] nghbr_number the number of neighbouring segments to find
         */
       void
-      setNumberOfRegionNeighbours (unsigned int nghbr_number);
+      setNumberOfRegionNeighbours (uindex_t nghbr_number);
 
       /** \brief Returns the flag that signalize if the smoothness test is turned on/off. */
       bool
@@ -205,7 +205,7 @@ namespace pcl
         * \param[out] dist the array of distances to the corresponding neighbours
         */
       void
-      findRegionsKNN (index_t index, int nghbr_number, Indices& nghbrs, std::vector<float>& dist);
+      findRegionsKNN (index_t index, index_t nghbr_number, Indices& nghbrs, std::vector<float>& dist);
 
       /** \brief This function implements the merging algorithm described in the article
         * "Color-based segmentation of point clouds"
@@ -230,14 +230,14 @@ namespace pcl
         * to the corresponding homogeneous region.
         */
       void
-      findRegionNeighbours (std::vector< std::vector< std::pair<float, int> > >& neighbours_out, std::vector< std::vector<int> >& regions_in);
+      findRegionNeighbours (std::vector< std::vector< std::pair<float, index_t> > >& neighbours_out, std::vector< std::vector<index_t> >& regions_in);
 
       /** \brief This function simply assembles the regions from list of point labels.
         * \param[in] num_pts_in_region for each final region it stores the corresponding number of points in it
         * \param[in] num_regions number of regions to assemble
         */
       void
-      assembleRegions (std::vector<unsigned int>& num_pts_in_region, int num_regions);
+      assembleRegions (std::vector<uindex_t>& num_pts_in_region, index_t num_regions);
 
       /** \brief This function is checking if the point with index 'nghbr' belongs to the segment.
         * If so, then it returns true. It also checks if this point can serve as the seed.
@@ -247,7 +247,7 @@ namespace pcl
         * \param[out] is_a_seed this value is set to true if the point with index 'nghbr' can serve as the seed
         */
       bool
-      validatePoint (index_t initial_seed, index_t point, index_t nghbr, bool& is_a_seed) const override;
+      validatePoint (int initial_seed, index_t point, index_t nghbr, bool& is_a_seed) const override;
 
     protected:
 
@@ -261,19 +261,19 @@ namespace pcl
       float distance_threshold_;
 
       /** \brief Number of neighbouring segments to find. */
-      unsigned int region_neighbour_number_;
+      uindex_t region_neighbour_number_;
 
       /** \brief Stores distances for the point neighbours from point_neighbours_ */
       std::vector< std::vector<float> > point_distances_;
 
       /** \brief Stores the neighboures for the corresponding segments. */
-      std::vector< std::vector<int> > segment_neighbours_;
+      std::vector< std::vector<index_t> > segment_neighbours_;
 
       /** \brief Stores distances for the segment neighbours from segment_neighbours_ */
       std::vector< std::vector<float> > segment_distances_;
 
       /** \brief Stores new indices for segments that were obtained at the region growing stage. */
-      std::vector<int> segment_labels_;
+      std::vector<index_t> segment_labels_;
 
     public:
       PCL_MAKE_ALIGNED_OPERATOR_NEW

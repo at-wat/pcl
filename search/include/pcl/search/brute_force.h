@@ -103,7 +103,7 @@ namespace pcl
           * a priori!)
           * \return number of neighbors found
           */
-        int
+        index_t
         nearestKSearch (const PointT &point, int k, Indices &k_indices, std::vector<float> &k_distances) const override;
 
         /** \brief Search for all the nearest neighbors of the query point in a given radius.
@@ -116,24 +116,24 @@ namespace pcl
           * returned.
           * \return number of neighbors found in radius
           */
-        int
+        index_t
         radiusSearch (const PointT& point, double radius,
                       Indices &k_indices, std::vector<float> &k_sqr_distances,
                       unsigned int max_nn = 0) const override;
 
       private:
-        int
+        index_t
         denseKSearch (const PointT &point, int k, Indices &k_indices, std::vector<float> &k_distances) const;
 
-        int
+        index_t
         sparseKSearch (const PointT &point, int k, Indices &k_indices, std::vector<float> &k_distances) const;
 
-        int
+        index_t
         denseRadiusSearch (const PointT& point, double radius,
                            Indices &k_indices, std::vector<float> &k_sqr_distances,
                            unsigned int max_nn = 0) const;
 
-        int
+        index_t
         sparseRadiusSearch (const PointT& point, double radius,
                             Indices &k_indices, std::vector<float> &k_sqr_distances,
                             unsigned int max_nn = 0) const;

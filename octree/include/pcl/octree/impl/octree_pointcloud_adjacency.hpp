@@ -153,11 +153,11 @@ pcl::octree::OctreePointCloudAdjacency<PointT, LeafContainerT, BranchContainerT>
 template <typename PointT, typename LeafContainerT, typename BranchContainerT>
 void
 pcl::octree::OctreePointCloudAdjacency<PointT, LeafContainerT, BranchContainerT>::
-    addPointIdx(const int pointIdx_arg)
+    addPointIdx(const index_t pointIdx_arg)
 {
   OctreeKey key;
 
-  assert(pointIdx_arg < static_cast<int>(this->input_->size()));
+  assert(pointIdx_arg < static_cast<index_t>(this->input_->size()));
 
   const PointT& point = (*this->input_)[pointIdx_arg];
   if (!pcl::isFinite(point))
@@ -185,16 +185,16 @@ pcl::octree::OctreePointCloudAdjacency<PointT, LeafContainerT, BranchContainerT>
   }
 
   OctreeKey neighbor_key;
-  int dx_min = (key_arg.x > 0) ? -1 : 0;
-  int dy_min = (key_arg.y > 0) ? -1 : 0;
-  int dz_min = (key_arg.z > 0) ? -1 : 0;
-  int dx_max = (key_arg.x == this->max_key_.x) ? 0 : 1;
-  int dy_max = (key_arg.y == this->max_key_.y) ? 0 : 1;
-  int dz_max = (key_arg.z == this->max_key_.z) ? 0 : 1;
+  index_t dx_min = (key_arg.x > 0) ? -1 : 0;
+  index_t dy_min = (key_arg.y > 0) ? -1 : 0;
+  index_t dz_min = (key_arg.z > 0) ? -1 : 0;
+  index_t dx_max = (key_arg.x == this->max_key_.x) ? 0 : 1;
+  index_t dy_max = (key_arg.y == this->max_key_.y) ? 0 : 1;
+  index_t dz_max = (key_arg.z == this->max_key_.z) ? 0 : 1;
 
-  for (int dx = dx_min; dx <= dx_max; ++dx) {
-    for (int dy = dy_min; dy <= dy_max; ++dy) {
-      for (int dz = dz_min; dz <= dz_max; ++dz) {
+  for (index_t dx = dx_min; dx <= dx_max; ++dx) {
+    for (index_t dy = dy_min; dy <= dy_max; ++dy) {
+      for (index_t dz = dz_min; dz <= dz_max; ++dz) {
         neighbor_key.x = static_cast<std::uint32_t>(key_arg.x + dx);
         neighbor_key.y = static_cast<std::uint32_t>(key_arg.y + dy);
         neighbor_key.z = static_cast<std::uint32_t>(key_arg.z + dz);

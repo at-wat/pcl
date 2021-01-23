@@ -51,7 +51,7 @@
 template <typename PointInT, typename PointNT, typename PointOutT> bool
 pcl::FPFHEstimation<PointInT, PointNT, PointOutT>::computePairFeatures (
     const pcl::PointCloud<PointInT> &cloud, const pcl::PointCloud<PointNT> &normals,
-    int p_idx, int q_idx, float &f1, float &f2, float &f3, float &f4)
+    index_t p_idx, index_t q_idx, float &f1, float &f2, float &f3, float &f4)
 {
   pcl::computePairFeatures (cloud[p_idx].getVector4fMap (), normals[p_idx].getNormalVector4fMap (),
       cloud[q_idx].getVector4fMap (), normals[q_idx].getNormalVector4fMap (),
@@ -63,7 +63,7 @@ pcl::FPFHEstimation<PointInT, PointNT, PointOutT>::computePairFeatures (
 template <typename PointInT, typename PointNT, typename PointOutT> void
 pcl::FPFHEstimation<PointInT, PointNT, PointOutT>::computePointSPFHSignature (
     const pcl::PointCloud<PointInT> &cloud, const pcl::PointCloud<PointNT> &normals,
-    int p_idx, int row, const pcl::Indices &indices,
+    index_t p_idx, index_t row, const pcl::Indices &indices,
     Eigen::MatrixXf &hist_f1, Eigen::MatrixXf &hist_f2, Eigen::MatrixXf &hist_f3)
 {
   Eigen::Vector4f pfh_tuple;
@@ -88,17 +88,17 @@ pcl::FPFHEstimation<PointInT, PointNT, PointOutT>::computePointSPFHSignature (
         continue;
 
     // Normalize the f1, f2, f3 features and push them in the histogram
-    int h_index = static_cast<int> (std::floor (nr_bins_f1 * ((pfh_tuple[0] + M_PI) * d_pi_)));
+    index_t h_index = static_cast<index_t> (std::floor (nr_bins_f1 * ((pfh_tuple[0] + M_PI) * d_pi_)));
     if (h_index < 0)           h_index = 0;
     if (h_index >= nr_bins_f1) h_index = nr_bins_f1 - 1;
     hist_f1 (row, h_index) += hist_incr;
 
-    h_index = static_cast<int> (std::floor (nr_bins_f2 * ((pfh_tuple[1] + 1.0) * 0.5)));
+    h_index = static_cast<index_t> (std::floor (nr_bins_f2 * ((pfh_tuple[1] + 1.0) * 0.5)));
     if (h_index < 0)           h_index = 0;
     if (h_index >= nr_bins_f2) h_index = nr_bins_f2 - 1;
     hist_f2 (row, h_index) += hist_incr;
 
-    h_index = static_cast<int> (std::floor (nr_bins_f3 * ((pfh_tuple[2] + 1.0) * 0.5)));
+    h_index = static_cast<index_t> (std::floor (nr_bins_f3 * ((pfh_tuple[2] + 1.0) * 0.5)));
     if (h_index < 0)           h_index = 0;
     if (h_index >= nr_bins_f3) h_index = nr_bins_f3 - 1;
     hist_f3 (row, h_index) += hist_incr;
@@ -109,7 +109,7 @@ pcl::FPFHEstimation<PointInT, PointNT, PointOutT>::computePointSPFHSignature (
 template <typename PointInT, typename PointNT, typename PointOutT> void
 pcl::FPFHEstimation<PointInT, PointNT, PointOutT>::weightPointSPFHSignature (
     const Eigen::MatrixXf &hist_f1, const Eigen::MatrixXf &hist_f2, const Eigen::MatrixXf &hist_f3,
-    const std::vector<int> &indices, const std::vector<float> &dists, Eigen::VectorXf &fpfh_histogram)
+    const std::vector<index_t> &indices, const std::vector<float> &dists, Eigen::VectorXf &fpfh_histogram)
 {
   assert (indices.size () == dists.size ());
   // @TODO: use arrays
@@ -179,7 +179,7 @@ pcl::FPFHEstimation<PointInT, PointNT, PointOutT>::weightPointSPFHSignature (
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 template <typename PointInT, typename PointNT, typename PointOutT> void
-pcl::FPFHEstimation<PointInT, PointNT, PointOutT>::computeSPFHSignatures (std::vector<int> &spfh_hist_lookup,
+pcl::FPFHEstimation<PointInT, PointNT, PointOutT>::computeSPFHSignatures (std::vector<index_t> &spfh_hist_lookup,
     Eigen::MatrixXf &hist_f1, Eigen::MatrixXf &hist_f2, Eigen::MatrixXf &hist_f3)
 {
   // Allocate enough space to hold the NN search results
@@ -187,7 +187,7 @@ pcl::FPFHEstimation<PointInT, PointNT, PointOutT>::computeSPFHSignatures (std::v
   pcl::Indices nn_indices (k_);
   std::vector<float> nn_dists (k_);
 
-  std::set<int> spfh_indices;
+  std::set<index_t> spfh_indices;
   spfh_hist_lookup.resize (surface_->size ());
 
   // Build a list of (unique) indices for which we will need to compute SPFH signatures
@@ -207,7 +207,7 @@ pcl::FPFHEstimation<PointInT, PointNT, PointOutT>::computeSPFHSignatures (std::v
   {
     // Special case: When a feature must be computed at every point, there is no need for a neighborhood search
     for (std::size_t idx = 0; idx < indices_->size (); ++idx)
-      spfh_indices.insert (static_cast<int> (idx));
+      spfh_indices.insert (static_cast<index_t> (idx));
   }
 
   // Initialize the arrays that will store the SPFH signatures
@@ -242,7 +242,7 @@ pcl::FPFHEstimation<PointInT, PointNT, PointOutT>::computeFeature (PointCloudOut
   pcl::Indices nn_indices (k_);
   std::vector<float> nn_dists (k_);
 
-  std::vector<int> spfh_hist_lookup;
+  std::vector<index_t> spfh_hist_lookup;
   computeSPFHSignatures (spfh_hist_lookup, hist_f1_, hist_f2_, hist_f3_);
 
   output.is_dense = true;

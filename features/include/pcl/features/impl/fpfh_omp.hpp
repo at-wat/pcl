@@ -65,8 +65,8 @@ pcl::FPFHEstimationOMP<PointInT, PointNT, PointOutT>::setNumberOfThreads (unsign
 template <typename PointInT, typename PointNT, typename PointOutT> void
 pcl::FPFHEstimationOMP<PointInT, PointNT, PointOutT>::computeFeature (PointCloudOut &output)
 {
-  std::vector<int> spfh_indices_vec;
-  std::vector<int> spfh_hist_lookup (surface_->size ());
+  std::vector<index_t> spfh_indices_vec;
+  std::vector<index_t> spfh_hist_lookup (surface_->size ());
 
   // Build a list of (unique) indices for which we will need to compute SPFH signatures
   // (We need an SPFH signature for every point that is a neighbor of any point in input_[indices_])
@@ -76,10 +76,10 @@ pcl::FPFHEstimationOMP<PointInT, PointNT, PointOutT>::computeFeature (PointCloud
     pcl::Indices nn_indices (k_); // \note These resizes are irrelevant for a radiusSearch ().
     std::vector<float> nn_dists (k_); 
 
-    std::set<int> spfh_indices_set;
+    std::set<index_t> spfh_indices_set;
     for (std::size_t idx = 0; idx < indices_->size (); ++idx)
     {
-      int p_idx = (*indices_)[idx];
+      index_t p_idx = (*indices_)[idx];
       if (!isFinite ((*input_)[p_idx]) ||
           this->searchForNeighbors (p_idx, search_parameter_, nn_indices, nn_dists) == 0)
         continue;
@@ -116,7 +116,7 @@ pcl::FPFHEstimationOMP<PointInT, PointNT, PointOutT>::computeFeature (PointCloud
   for (std::ptrdiff_t i = 0; i < static_cast<std::ptrdiff_t> (spfh_indices_vec.size ()); ++i)
   {
     // Get the next point index
-    int p_idx = spfh_indices_vec[i];
+    index_t p_idx = spfh_indices_vec[i];
 
     // Find the neighborhood around p_idx
     if (!isFinite ((*input_)[p_idx]) ||
@@ -158,7 +158,7 @@ pcl::FPFHEstimationOMP<PointInT, PointNT, PointOutT>::computeFeature (PointCloud
 
     // ... and remap the nn_indices values so that they represent row indices in the spfh_hist_* matrices 
     // instead of indices into surface_->points
-    for (int &nn_index : nn_indices)
+    for (index_t &nn_index : nn_indices)
       nn_index = spfh_hist_lookup[nn_index];
 
     // Compute the FPFH signature (i.e. compute a weighted combination of local SPFH signatures) ...

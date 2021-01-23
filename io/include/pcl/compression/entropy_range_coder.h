@@ -133,7 +133,7 @@ namespace pcl
         * \return amount of bytes written to output stream
         */
       unsigned long
-      encodeIntVectorToStream (std::vector<unsigned int>& inputIntVector_arg, std::ostream& outputByterStream_arg);
+      encodeIntVectorToStream (std::vector<uindex_t>& inputIntVector_arg, std::ostream& outputByterStream_arg);
 
       /** \brief Decode stream to output integer vector
        * \param inputByteStream_arg input stream of compressed data
@@ -141,7 +141,7 @@ namespace pcl
        * \return amount of bytes read from input stream
        */
       unsigned long
-      decodeStreamToIntVector (std::istream& inputByteStream_arg, std::vector<unsigned int>& outputIntVector_arg);
+      decodeStreamToIntVector (std::istream& inputByteStream_arg, std::vector<uindex_t>& outputIntVector_arg);
 
       /** \brief Encode char vector to output stream
        * \param inputByteVector_arg input vector

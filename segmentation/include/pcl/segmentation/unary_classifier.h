@@ -88,11 +88,11 @@ namespace pcl
       void
       queryFeatureDistances (std::vector<pcl::PointCloud<pcl::FPFHSignature33>::Ptr> &trained_features,
                              pcl::PointCloud<pcl::FPFHSignature33>::Ptr query_features,
-                             std::vector<int> &indi,
+                             std::vector<index_t> &indi,
                              std::vector<float> &dist);
 
       void
-      assignLabels (std::vector<int> &indi,
+      assignLabels (std::vector<index_t> &indi,
                     std::vector<float> &dist,
                     int n_feature_means,
                     float feature_threshold,
@@ -128,7 +128,7 @@ namespace pcl
 
       void
       findClusters (typename pcl::PointCloud<PointT>::Ptr in,
-                    std::vector<int> &cluster_numbers);
+                    std::vector<index_t> &cluster_numbers);
 
       void
       getCloudWithLabel (typename pcl::PointCloud<PointT>::Ptr in,
@@ -153,7 +153,7 @@ namespace pcl
       
       bool label_field_;
       
-      unsigned int cluster_size_;
+      uindex_t cluster_size_;
 
       float normal_radius_search_;
       float fpfh_radius_search_;

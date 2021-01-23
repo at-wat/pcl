@@ -81,7 +81,7 @@ pcl::search::Search<PointT>::setInputCloud (
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-template <typename PointT> int
+template <typename PointT> pcl::index_t
 pcl::search::Search<PointT>::nearestKSearch (
     const PointCloud &cloud, index_t index, int k,
     Indices &k_indices, std::vector<float> &k_sqr_distances) const
@@ -91,7 +91,7 @@ pcl::search::Search<PointT>::nearestKSearch (
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-template <typename PointT> int
+template <typename PointT> pcl::index_t
 pcl::search::Search<PointT>::nearestKSearch (
     index_t index, int k,
     Indices &k_indices,
@@ -132,7 +132,7 @@ pcl::search::Search<PointT>::nearestKSearch (
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-template <typename PointT> int
+template <typename PointT> pcl::index_t
 pcl::search::Search<PointT>::radiusSearch (
     const PointCloud &cloud, index_t index, double radius,
     Indices &k_indices, std::vector<float> &k_sqr_distances,
@@ -143,7 +143,7 @@ pcl::search::Search<PointT>::radiusSearch (
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-template <typename PointT> int
+template <typename PointT> pcl::index_t
 pcl::search::Search<PointT>::radiusSearch (
     index_t index, double radius, Indices &k_indices,
     std::vector<float> &k_sqr_distances, unsigned int max_nn ) const

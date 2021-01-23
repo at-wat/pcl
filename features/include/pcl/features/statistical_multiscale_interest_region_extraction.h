@@ -104,7 +104,7 @@ namespace pcl
       void
       geodesicFixedRadiusSearch (std::size_t &query_index,
                                  float &radius,
-                                 std::vector<int> &result_indices);
+                                 std::vector<index_t> &result_indices);
 
       void
       computeF ();

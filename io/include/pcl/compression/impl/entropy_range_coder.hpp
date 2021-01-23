@@ -60,19 +60,19 @@ pcl::AdaptiveRangeCoder::encodeCharVectorToStream (const std::vector<char>& inpu
   const DWord bottom = static_cast<DWord> (1) << 16;
   const DWord maxRange = static_cast<DWord> (1) << 16;
 
-  unsigned int input_size = static_cast<unsigned> (inputByteVector_arg.size ());
+  uindex_t input_size = static_cast<uindex_t> (inputByteVector_arg.size ());
 
   // init output vector
   outputCharVector_.clear ();
   outputCharVector_.reserve (sizeof(char) * input_size);
 
-  unsigned int readPos = 0;
+  uindex_t readPos = 0;
 
   DWord low = 0;
   DWord range = static_cast<DWord> (-1);
 
   // initialize cumulative frequency table
-  for (unsigned int i = 0; i < 257; i++)
+  for (uindex_t i = 0; i < 257; i++)
     freq[i] = i;
 
   // scan input
@@ -95,14 +95,14 @@ pcl::AdaptiveRangeCoder::encodeCharVectorToStream (const std::vector<char>& inpu
     }
 
     // update frequency table
-    for (unsigned int j = ch + 1; j < 257; j++)
+    for (uindex_t j = ch + 1; j < 257; j++)
       freq[j]++;
 
     // detect overflow
     if (freq[256] >= maxRange)
     {
       // rescale
-      for (unsigned int f = 1; f <= 256; f++)
+      for (uindex_t f = 1; f <= 256; f++)
       {
         freq[f] /= 2;
         if (freq[f] <= freq[f - 1])
@@ -113,7 +113,7 @@ pcl::AdaptiveRangeCoder::encodeCharVectorToStream (const std::vector<char>& inpu
   }
 
   // flush remaining data
-  for (unsigned int i = 0; i < 4; i++)
+  for (uindex_t i = 0; i < 4; i++)
   {
     char out = static_cast<char> (low >> 24);
     outputCharVector_.push_back (out);
@@ -138,18 +138,18 @@ pcl::AdaptiveRangeCoder::decodeStreamToCharVector (std::istream& inputByteStream
   const DWord bottom = static_cast<DWord> (1) << 16;
   const DWord maxRange = static_cast<DWord> (1) << 16;
 
-  unsigned int output_size = static_cast<unsigned> (outputByteVector_arg.size ());
+  uindex_t output_size = static_cast<unsigned> (outputByteVector_arg.size ());
 
   unsigned long streamByteCount = 0;
 
-  unsigned int outputBufPos = 0;
+  uindex_t outputBufPos = 0;
 
   DWord code = 0;
   DWord low = 0;
   DWord range = static_cast<DWord> (-1);
 
   // init decoding
-  for (unsigned int i = 0; i < 4; i++)
+  for (uindex_t i = 0; i < 4; i++)
   {
     std::uint8_t ch;
     inputByteStream_arg.read (reinterpret_cast<char*> (&ch), sizeof(char));
@@ -158,11 +158,11 @@ pcl::AdaptiveRangeCoder::decodeStreamToCharVector (std::istream& inputByteStream
   }
 
   // init cumulative frequency table
-  for (unsigned int i = 0; i <= 256; i++)
+  for (uindex_t i = 0; i <= 256; i++)
     freq[i] = i;
 
   // decoding loop
-  for (unsigned int i = 0; i < output_size; i++)
+  for (uindex_t i = 0; i < output_size; i++)
   {
     std::uint8_t symbol = 0;
     std::uint8_t sSize = 256 / 2;
@@ -199,14 +199,14 @@ pcl::AdaptiveRangeCoder::decodeStreamToCharVector (std::istream& inputByteStream
     }
 
     // update cumulative frequency table
-    for (unsigned int j = symbol + 1; j < 257; j++)
+    for (uindex_t j = symbol + 1; j < 257; j++)
       freq[j]++;
 
     // detect overflow
     if (freq[256] >= maxRange)
     {
       // rescale
-      for (unsigned int f = 1; f <= 256; f++)
+      for (uindex_t f = 1; f <= 256; f++)
       {
         freq[f] /= 2;
         if (freq[f] <= freq[f - 1])
@@ -220,7 +220,7 @@ pcl::AdaptiveRangeCoder::decodeStreamToCharVector (std::istream& inputByteStream
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 unsigned long
-pcl::StaticRangeCoder::encodeIntVectorToStream (std::vector<unsigned int>& inputIntVector_arg,
+pcl::StaticRangeCoder::encodeIntVectorToStream (std::vector<uindex_t>& inputIntVector_arg,
                                                 std::ostream& outputByteStream_arg)
 {
   // define numerical limits
@@ -236,13 +236,13 @@ pcl::StaticRangeCoder::encodeIntVectorToStream (std::vector<unsigned int>& input
 
   std::uint64_t frequencyTableSize = 1;
 
-  unsigned int readPos = 0;
+  uindex_t readPos = 0;
 
   // calculate frequency table
   cFreqTable_[0] = cFreqTable_[1] = 0;
   while (readPos < input_size)
   {
-    unsigned int inputSymbol = inputIntVector_arg[readPos++];
+    uindex_t inputSymbol = inputIntVector_arg[readPos++];
 
     if (inputSymbol + 1 >= frequencyTableSize)
     {
@@ -316,7 +316,7 @@ pcl::StaticRangeCoder::encodeIntVectorToStream (std::vector<unsigned int>& input
   {
 
     // read symol
-    unsigned int inputsymbol = inputIntVector_arg[readPos++];
+    uindex_t inputsymbol = inputIntVector_arg[readPos++];
 
     // map to range
     low += cFreqTable_[inputsymbol] * (range /= cFreqTable_[static_cast<std::size_t> (frequencyTableSize - 1)]);
@@ -334,7 +334,7 @@ pcl::StaticRangeCoder::encodeIntVectorToStream (std::vector<unsigned int>& input
   }
 
   // flush remaining data
-  for (unsigned int i = 0; i < 8; i++)
+  for (uindex_t i = 0; i < 8; i++)
   {
     char out = static_cast<char> (low >> 56);
     outputCharVector_.push_back (out);
@@ -352,7 +352,7 @@ pcl::StaticRangeCoder::encodeIntVectorToStream (std::vector<unsigned int>& input
 //////////////////////////////////////////////////////////////////////////////////////////////
 unsigned long
 pcl::StaticRangeCoder::decodeStreamToIntVector (std::istream& inputByteStream_arg,
-                                                std::vector<unsigned int>& outputIntVector_arg)
+                                                std::vector<uindex_t>& outputIntVector_arg)
 {
   // define range limits
   const std::uint64_t top = static_cast<std::uint64_t> (1) << 56;
@@ -361,7 +361,7 @@ pcl::StaticRangeCoder::decodeStreamToIntVector (std::istream& inputByteStream_ar
   std::uint64_t frequencyTableSize;
   unsigned char frequencyTableByteSize;
 
-  unsigned int outputBufPos = 0;
+  uindex_t outputBufPos = 0;
   std::size_t output_size = outputIntVector_arg.size ();
 
   // read size of cumulative frequency table from stream
@@ -392,7 +392,7 @@ pcl::StaticRangeCoder::decodeStreamToIntVector (std::istream& inputByteStream_ar
   std::uint64_t range = static_cast<std::uint64_t> (-1);
 
   // init code vector
-  for (unsigned int i = 0; i < 8; i++)
+  for (uindex_t i = 0; i < 8; i++)
   {
     std::uint8_t ch;
     inputByteStream_arg.read (reinterpret_cast<char*> (&ch), sizeof(char));
@@ -418,7 +418,7 @@ pcl::StaticRangeCoder::decodeStreamToIntVector (std::istream& inputByteStream_ar
     }
 
     // write symbol to output stream
-    outputIntVector_arg[outputBufPos++] = static_cast<unsigned int> (symbol);
+    outputIntVector_arg[outputBufPos++] = static_cast<uindex_t> (symbol);
 
     // map to range
     low += cFreqTable_[static_cast<std::size_t> (symbol)] * range;
@@ -453,8 +453,8 @@ pcl::StaticRangeCoder::encodeCharVectorToStream (const std::vector<char>& inputB
 
   DWord low, range;
 
-  unsigned int input_size;
-  input_size = static_cast<unsigned int> (inputByteVector_arg.size ());
+  uindex_t input_size;
+  input_size = static_cast<uindex_t> (inputByteVector_arg.size ());
 
   // init output vector
   outputCharVector_.clear ();
@@ -464,7 +464,7 @@ pcl::StaticRangeCoder::encodeCharVectorToStream (const std::vector<char>& inputB
 
   // calculate frequency table
   memset (FreqHist, 0, sizeof(FreqHist));
-  unsigned int readPos = 0;
+  uindex_t readPos = 0;
   while (readPos < input_size)
   {
     std::uint8_t symbol = static_cast<std::uint8_t> (inputByteVector_arg[readPos++]);
@@ -552,14 +552,14 @@ pcl::StaticRangeCoder::decodeStreamToCharVector (std::istream& inputByteStream_a
   DWord low, range;
   DWord code;
 
-  unsigned int outputBufPos;
-  unsigned int output_size;
+  uindex_t outputBufPos;
+  uindex_t output_size;
 
   unsigned long streamByteCount;
 
   streamByteCount = 0;
 
-  output_size = static_cast<unsigned int> (outputByteVector_arg.size ());
+  output_size = static_cast<uindex_t> (outputByteVector_arg.size ());
 
   outputBufPos = 0;
 
@@ -572,7 +572,7 @@ pcl::StaticRangeCoder::decodeStreamToCharVector (std::istream& inputByteStream_a
   range = static_cast<DWord> (-1);
 
   // init code
-  for (unsigned int i = 0; i < 4; i++)
+  for (uindex_t i = 0; i < 4; i++)
   {
     std::uint8_t ch;
     inputByteStream_arg.read (reinterpret_cast<char*> (&ch), sizeof(char));
@@ -581,7 +581,7 @@ pcl::StaticRangeCoder::decodeStreamToCharVector (std::istream& inputByteStream_a
   }
 
   // decoding
-  for (unsigned int i = 0; i < output_size; i++)
+  for (uindex_t i = 0; i < output_size; i++)
   {
     // symbol lookup in cumulative frequency table
     std::uint8_t symbol = 0;

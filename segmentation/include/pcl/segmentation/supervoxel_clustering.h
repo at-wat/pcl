@@ -162,7 +162,7 @@ namespace pcl
           Eigen::Vector4f normal_;
           float curvature_;
           float distance_;
-          int idx_;
+          index_t idx_;
           SupervoxelHelper* owner_;
 
         public:

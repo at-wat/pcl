@@ -114,7 +114,7 @@ public:
    */
   inline void
   getRejectedQueryIndices(const pcl::Correspondences& correspondences,
-                          std::vector<int>& indices)
+                          std::vector<index_t>& indices)
   {
     if (!input_correspondences_ || input_correspondences_->empty()) {
       PCL_WARN("[pcl::registration::%s::getRejectedQueryIndices] Input correspondences "
@@ -215,7 +215,7 @@ public:
 
   virtual ~DataContainerInterface() = default;
   virtual double
-  getCorrespondenceScore(int index) = 0;
+  getCorrespondenceScore(index_t index) = 0;
   virtual double
   getCorrespondenceScore(const pcl::Correspondence&) = 0;
   virtual double
@@ -343,12 +343,12 @@ public:
    * \param[in] index index of the point in the input cloud
    */
   inline double
-  getCorrespondenceScore(int index) override
+  getCorrespondenceScore(index_t index) override
   {
     if (target_cloud_updated_ && !force_no_recompute_) {
       tree_->setInputCloud(target_);
     }
-    std::vector<int> indices(1);
+    std::vector<index_t> indices(1);
     std::vector<float> distances(1);
     if (tree_->nearestKSearch((*input_)[index], 1, indices, distances))
       return (distances[0]);

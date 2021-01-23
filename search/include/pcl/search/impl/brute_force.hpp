@@ -50,7 +50,7 @@ pcl::search::BruteForce<PointT>::getDistSqr (
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////
-template <typename PointT> int
+template <typename PointT> pcl::index_t
 pcl::search::BruteForce<PointT>::nearestKSearch (
     const PointT& point, int k, Indices& k_indices, std::vector<float>& k_distances) const
 {
@@ -67,7 +67,7 @@ pcl::search::BruteForce<PointT>::nearestKSearch (
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////
-template <typename PointT> int
+template <typename PointT> pcl::index_t
 pcl::search::BruteForce<PointT>::denseKSearch (
     const PointT &point, int k, Indices &k_indices, std::vector<float> &k_distances) const
 {
@@ -131,11 +131,11 @@ pcl::search::BruteForce<PointT>::denseKSearch (
     --idx;
   }
   
-  return (static_cast<int> (k_indices.size ()));
+  return (static_cast<index_t> (k_indices.size ()));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////
-template <typename PointT> int
+template <typename PointT> pcl::index_t
 pcl::search::BruteForce<PointT>::sparseKSearch (
     const PointT &point, int k, Indices &k_indices, std::vector<float> &k_distances) const
 {
@@ -210,11 +210,11 @@ pcl::search::BruteForce<PointT>::sparseKSearch (
     queue.pop ();
     --idx;
   }
-  return (static_cast<int> (k_indices.size ()));
+  return (static_cast<index_t> (k_indices.size ()));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////
-template <typename PointT> int
+template <typename PointT> pcl::index_t
 pcl::search::BruteForce<PointT>::denseRadiusSearch (
     const PointT& point, double radius,
     Indices &k_indices, std::vector<float> &k_sqr_distances,
@@ -265,11 +265,11 @@ pcl::search::BruteForce<PointT>::denseRadiusSearch (
   if (sorted_results_)
     this->sortResults (k_indices, k_sqr_distances);
   
-  return (static_cast<int> (k_indices.size ()));
+  return (static_cast<index_t> (k_indices.size ()));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////
-template <typename PointT> int
+template <typename PointT> pcl::index_t
 pcl::search::BruteForce<PointT>::sparseRadiusSearch (
     const PointT& point, double radius,
     Indices &k_indices, std::vector<float> &k_sqr_distances,
@@ -326,11 +326,11 @@ pcl::search::BruteForce<PointT>::sparseRadiusSearch (
   if (sorted_results_)
     this->sortResults (k_indices, k_sqr_distances);
 
-  return (static_cast<int> (k_indices.size ()));
+  return (static_cast<index_t> (k_indices.size ()));
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////
-template <typename PointT> int
+template <typename PointT> pcl::index_t
 pcl::search::BruteForce<PointT>::radiusSearch (
     const PointT& point, double radius, Indices &k_indices,
     std::vector<float> &k_sqr_distances, unsigned int max_nn) const

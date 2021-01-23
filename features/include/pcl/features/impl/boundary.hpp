@@ -49,8 +49,8 @@
 //////////////////////////////////////////////////////////////////////////////////////////////
 template <typename PointInT, typename PointNT, typename PointOutT> bool
 pcl::BoundaryEstimation<PointInT, PointNT, PointOutT>::isBoundaryPoint (
-      const pcl::PointCloud<PointInT> &cloud, int q_idx, 
-      const std::vector<int> &indices, 
+      const pcl::PointCloud<PointInT> &cloud, index_t q_idx, 
+      const std::vector<index_t> &indices, 
       const Eigen::Vector4f &u, const Eigen::Vector4f &v, 
       const float angle_threshold)
 {
@@ -74,7 +74,7 @@ pcl::BoundaryEstimation<PointInT, PointNT, PointOutT>::isBoundaryPoint (
   // Compute the angles between each neighboring point and the query point itself
   std::vector<float> angles (indices.size ());
   float max_dif = FLT_MIN, dif;
-  int cp = 0;
+  index_t cp = 0;
 
   for (const auto &index : indices)
   {

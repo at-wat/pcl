@@ -87,20 +87,20 @@ namespace pcl
       ~RegionGrowing ();
 
       /** \brief Get the minimum number of points that a cluster needs to contain in order to be considered valid. */
-      int
+      index_t
       getMinClusterSize ();
 
       /** \brief Set the minimum number of points that a cluster needs to contain in order to be considered valid. */
       void
-      setMinClusterSize (int min_cluster_size);
+      setMinClusterSize (index_t min_cluster_size);
 
       /** \brief Get the maximum number of points that a cluster needs to contain in order to be considered valid. */
-      int
+      index_t
       getMaxClusterSize ();
 
       /** \brief Set the maximum number of points that a cluster needs to contain in order to be considered valid. */
       void
-      setMaxClusterSize (int max_cluster_size);
+      setMaxClusterSize (index_t max_cluster_size);
 
       /** \brief Returns the flag value. This flag signalizes which mode of algorithm will be used.
         * If it is set to true than it will work as said in the article. This means that
@@ -173,14 +173,14 @@ namespace pcl
       setCurvatureThreshold (float curvature);
 
       /** \brief Returns the number of nearest neighbours used for KNN. */
-      unsigned int
+      uindex_t
       getNumberOfNeighbours () const;
 
       /** \brief Allows to set the number of neighbours. For more information check the article.
         * \param[in] neighbour_number number of neighbours to use
         */
       void
-      setNumberOfNeighbours (unsigned int neighbour_number);
+      setNumberOfNeighbours (uindex_t neighbour_number);
 
       /** \brief Returns the pointer to the search method that is used for KNN. */
       KdTreePtr
@@ -215,7 +215,7 @@ namespace pcl
         * \param[out] cluster cluster to which the point belongs.
         */
       virtual void
-      getSegmentFromPoint (int index, pcl::PointIndices& cluster);
+      getSegmentFromPoint (index_t index, pcl::PointIndices& cluster);
 
       /** \brief If the cloud was successfully segmented, then function
         * returns colored cloud. Otherwise it returns an empty pointer.
@@ -260,8 +260,8 @@ namespace pcl
         * \param[in] initial_seed index of the point that will serve as the seed point
         * \param[in] segment_number indicates which number this segment will have
         */
-      int
-      growRegion (int initial_seed, int segment_number);
+      index_t
+      growRegion (int initial_seed, index_t segment_number);
 
       /** \brief This function is checking if the point with index 'nghbr' belongs to the segment.
         * If so, then it returns true. It also checks if this point can serve as the seed.
@@ -271,7 +271,7 @@ namespace pcl
         * \param[out] is_a_seed this value is set to true if the point with index 'nghbr' can serve as the seed
         */
       virtual bool
-      validatePoint (int initial_seed, int point, int nghbr, bool& is_a_seed) const;
+      validatePoint (int initial_seed, index_t point, index_t nghbr, bool& is_a_seed) const;
 
       /** \brief This function simply assembles the regions from list of point labels.
         * Each cluster is an array of point indices.
@@ -282,10 +282,10 @@ namespace pcl
     protected:
 
       /** \brief Stores the minimum number of points that a cluster needs to contain in order to be considered valid. */
-      int min_pts_per_cluster_;
+      index_t min_pts_per_cluster_;
 
       /** \brief Stores the maximum number of points that a cluster needs to contain in order to be considered valid. */
-      int max_pts_per_cluster_;
+      index_t max_pts_per_cluster_;
 
       /** \brief Flag that signalizes if the smoothness constraint will be used. */
       bool smooth_mode_flag_;
@@ -306,7 +306,7 @@ namespace pcl
       float curvature_threshold_;
 
       /** \brief Number of neighbours to find. */
-      unsigned int neighbour_number_;
+      uindex_t neighbour_number_;
 
       /** \brief Serch method that will be used for KNN. */
       KdTreePtr search_;
@@ -315,10 +315,10 @@ namespace pcl
       NormalPtr normals_;
 
       /** \brief Contains neighbours of each point. */
-      std::vector<std::vector<int> > point_neighbours_;
+      std::vector<std::vector<index_t> > point_neighbours_;
 
       /** \brief Point labels that tells to which segment each point belongs. */
-      std::vector<int> point_labels_;
+      std::vector<index_t> point_labels_;
 
       /** \brief If set to true then normal/smoothness test will be done during segmentation.
         * It is always set to true for the usual region growing algorithm. It is used for turning on/off the test
@@ -326,13 +326,13 @@ namespace pcl
       bool normal_flag_;
 
       /** \brief Tells how much points each segment contains. Used for reserving memory. */
-      std::vector<int> num_pts_in_segment_;
+      std::vector<index_t> num_pts_in_segment_;
 
       /** \brief After the segmentation it will contain the segments. */
       std::vector <pcl::PointIndices> clusters_;
 
       /** \brief Stores the number of segments. */
-      int number_of_segments_;
+      index_t number_of_segments_;
 
     public:
       PCL_MAKE_ALIGNED_OPERATOR_NEW
@@ -340,7 +340,7 @@ namespace pcl
 
   /** \brief This function is used as a comparator for sorting. */
   inline bool
-  comparePair (std::pair<float, int> i, std::pair<float, int> j)
+  comparePair (std::pair<float, index_t> i, std::pair<float, index_t> j)
   {
     return (i.first < j.first);
   }

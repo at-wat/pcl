@@ -71,7 +71,7 @@ namespace pcl
         // color field analysis
         cloud_with_color_ = false;
         std::vector<pcl::PCLPointField> fields;
-        int rgba_index = -1;
+        index_t rgba_index = -1;
         rgba_index = pcl::getFieldIndex<PointT> ("rgb", fields);
         if (rgba_index == -1)
         {
@@ -109,12 +109,12 @@ namespace pcl
 
         // initialize color encoding
         color_coder_.initializeEncoding ();
-        color_coder_.setPointCount (static_cast<unsigned int> (cloud_arg->size ()));
-        color_coder_.setVoxelCount (static_cast<unsigned int> (this->leaf_count_));
+        color_coder_.setPointCount (static_cast<uindex_t> (cloud_arg->size ()));
+        color_coder_.setVoxelCount (static_cast<uindex_t> (this->leaf_count_));
 
         // initialize point encoding
         point_coder_.initializeEncoding ();
-        point_coder_.setPointCount (static_cast<unsigned int> (cloud_arg->size ()));
+        point_coder_.setPointCount (static_cast<uindex_t> (cloud_arg->size ()));
 
         // serialize octree
         if (i_frame_)
@@ -187,7 +187,7 @@ namespace pcl
       // color field analysis
       cloud_with_color_ = false;
       std::vector<pcl::PCLPointField> fields;
-      int rgba_index = -1;
+      index_t rgba_index = -1;
       rgba_index = pcl::getFieldIndex<PointT> ("rgb", fields);
       if (rgba_index == -1)
         rgba_index = pcl::getFieldIndex<PointT> ("rgba", fields);
@@ -416,7 +416,7 @@ namespace pcl
     OctreePointCloudCompression<PointT, LeafT, BranchT, OctreeT>::syncToHeader ( std::istream& compressed_tree_data_in_arg)
     {
       // sync to frame header
-      unsigned int header_id_pos = 0;
+      uindex_t header_id_pos = 0;
       while (header_id_pos < strlen (frame_header_identifier_))
       {
         char readChar;
@@ -473,14 +473,14 @@ namespace pcl
         LeafT &leaf_arg, const OctreeKey & key_arg)
     {
       // reference to point indices vector stored within octree leaf
-      const std::vector<int>& leafIdx = leaf_arg.getPointIndicesVector();
+      const std::vector<index_t>& leafIdx = leaf_arg.getPointIndicesVector();
 
       if (!do_voxel_grid_enDecoding_)
       {
         double lowerVoxelCorner[3];
 
         // encode amount of points within voxel
-        point_count_data_vector_.push_back (static_cast<int> (leafIdx.size ()));
+        point_count_data_vector_.push_back (static_cast<index_t> (leafIdx.size ()));
 
         // calculate lower voxel corner based on octree key
         lowerVoxelCorner[0] = static_cast<double> (key_arg.x) * this->resolution_ + this->min_x_;

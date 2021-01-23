@@ -142,7 +142,7 @@ namespace pcl
           * a priori!)
           * \return number of neighbors found
           */
-        int
+        index_t
         nearestKSearch (const PointT &point, int k, 
                         Indices &k_indices,
                         std::vector<float> &k_sqr_distances) const override;
@@ -157,7 +157,7 @@ namespace pcl
           * returned.
           * \return number of neighbors found in radius
           */
-        int
+        index_t
         radiusSearch (const PointT& point, double radius, 
                       Indices &k_indices,
                       std::vector<float> &k_sqr_distances,

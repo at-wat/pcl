@@ -135,7 +135,7 @@ namespace pcl
           * a priori!)
           * \return number of neighbors found
           */
-        inline int
+        inline index_t
         nearestKSearch (const PointCloud &cloud, index_t index, int k, Indices &k_indices,
                         std::vector<float> &k_sqr_distances) const override
         {
@@ -150,7 +150,7 @@ namespace pcl
           * a priori!)
           * \return number of neighbors found
           */
-        inline int
+        inline index_t
         nearestKSearch (const PointT &point, int k, Indices &k_indices,
                         std::vector<float> &k_sqr_distances) const override
         {
@@ -168,7 +168,7 @@ namespace pcl
           * a priori!)
           * \return number of neighbors found
           */
-        inline int
+        inline index_t
         nearestKSearch (index_t index, int k, Indices &k_indices, std::vector<float> &k_sqr_distances) const override
         {
           return (tree_->nearestKSearch (index, k, k_indices, k_sqr_distances));
@@ -183,7 +183,7 @@ namespace pcl
          * \param max_nn if given, bounds the maximum returned neighbors to this value
          * \return number of neighbors found in radius
          */
-        inline int
+        inline index_t
         radiusSearch (const PointCloud &cloud, 
                       index_t index,
                       double radius,
@@ -194,7 +194,7 @@ namespace pcl
           tree_->radiusSearch (cloud, index, radius, k_indices, k_sqr_distances, max_nn);
           if (sorted_results_)
             this->sortResults (k_indices, k_sqr_distances);
-          return (static_cast<int> (k_indices.size ()));
+          return (static_cast<index_t> (k_indices.size ()));
         }
 
         /** \brief search for all neighbors of query point that are within a given radius.
@@ -205,7 +205,7 @@ namespace pcl
          * \param max_nn if given, bounds the maximum returned neighbors to this value
          * \return number of neighbors found in radius
          */
-        inline int
+        inline index_t
         radiusSearch (const PointT &p_q, 
                       double radius, 
                       Indices &k_indices,
@@ -215,7 +215,7 @@ namespace pcl
           tree_->radiusSearch (p_q, radius, k_indices, k_sqr_distances, max_nn);
           if (sorted_results_)
             this->sortResults (k_indices, k_sqr_distances);
-          return (static_cast<int> (k_indices.size ()));
+          return (static_cast<index_t> (k_indices.size ()));
         }
 
         /** \brief search for all neighbors of query point that are within a given radius.
@@ -227,14 +227,14 @@ namespace pcl
          * \param max_nn if given, bounds the maximum returned neighbors to this value
          * \return number of neighbors found in radius
          */
-        inline int
+        inline index_t
         radiusSearch (index_t index, double radius, Indices &k_indices,
                       std::vector<float> &k_sqr_distances, unsigned int max_nn = 0) const override
         {
           tree_->radiusSearch (index, radius, k_indices, k_sqr_distances, max_nn);
           if (sorted_results_)
             this->sortResults (k_indices, k_sqr_distances);
-          return (static_cast<int> (k_indices.size ()));
+          return (static_cast<index_t> (k_indices.size ()));
         }
 
 

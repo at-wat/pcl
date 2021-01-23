@@ -136,12 +136,12 @@ namespace pcl
         continue;
 
       Indices seed_queue;
-      int sq_idx = 0;
+      index_t sq_idx = 0;
       seed_queue.push_back (static_cast<index_t> (i));
 
       processed[i] = true;
 
-      while (sq_idx < static_cast<int> (seed_queue.size ()))
+      while (sq_idx < static_cast<index_t> (seed_queue.size ()))
       {
         // Search for sq_idx
         if (!tree->radiusSearch (seed_queue[sq_idx], tolerance, nn_indices, nn_distances))
@@ -250,12 +250,12 @@ namespace pcl
         continue;
 
       Indices seed_queue;
-      int sq_idx = 0;
+      index_t sq_idx = 0;
       seed_queue.push_back (indices[i]);
 
       processed[indices[i]] = true;
 
-      while (sq_idx < static_cast<int> (seed_queue.size ()))
+      while (sq_idx < static_cast<index_t> (seed_queue.size ()))
       {
         // Search for sq_idx
         if (!tree->radiusSearch (cloud[seed_queue[sq_idx]], tolerance, nn_indices, nn_distances))

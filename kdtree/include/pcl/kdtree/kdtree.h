@@ -54,8 +54,8 @@ namespace pcl
   class KdTree
   {
     public:
-      using IndicesPtr = shared_ptr<std::vector<int> >;
-      using IndicesConstPtr = shared_ptr<const std::vector<int> >;
+      using IndicesPtr = shared_ptr<std::vector<index_t> >;
+      using IndicesConstPtr = shared_ptr<const std::vector<index_t> >;
 
       using PointCloud = pcl::PointCloud<PointT>;
       using PointCloudPtr = typename PointCloud::Ptr;
@@ -131,9 +131,9 @@ namespace pcl
         * a priori!)
         * \return number of neighbors found
         */
-      virtual int
+      virtual index_t
       nearestKSearch (const PointT &p_q, unsigned int k,
-                      std::vector<int> &k_indices, std::vector<float> &k_sqr_distances) const = 0;
+                      std::vector<index_t> &k_indices, std::vector<float> &k_sqr_distances) const = 0;
 
       /** \brief Search for k-nearest neighbors for the given query point.
         *
@@ -151,11 +151,11 @@ namespace pcl
         *
         * \exception asserts in debug mode if the index is not between 0 and the maximum number of points
         */
-      virtual int
+      virtual index_t
       nearestKSearch (const PointCloud &cloud, int index, unsigned int k,
-                      std::vector<int> &k_indices, std::vector<float> &k_sqr_distances) const
+                      std::vector<index_t> &k_indices, std::vector<float> &k_sqr_distances) const
       {
-        assert (index >= 0 && index < static_cast<int> (cloud.size ()) && "Out-of-bounds error in nearestKSearch!");
+        assert (index >= 0 && index < static_cast<index_t> (cloud.size ()) && "Out-of-bounds error in nearestKSearch!");
         return (nearestKSearch (cloud[index], k, k_indices, k_sqr_distances));
       }
 
@@ -168,9 +168,9 @@ namespace pcl
         * a priori!)
         * \return number of neighbors found
         */
-      template <typename PointTDiff> inline int
+      template <typename PointTDiff> inline index_t
       nearestKSearchT (const PointTDiff &point, unsigned int k,
-                       std::vector<int> &k_indices, std::vector<float> &k_sqr_distances) const
+                       std::vector<index_t> &k_indices, std::vector<float> &k_sqr_distances) const
       {
         PointT p;
         copyPoint (point, p);
@@ -194,16 +194,16 @@ namespace pcl
         *
         * \exception asserts in debug mode if the index is not between 0 and the maximum number of points
         */
-      virtual int
-      nearestKSearch (int index, unsigned int k,
-                      std::vector<int> &k_indices, std::vector<float> &k_sqr_distances) const
+      virtual index_t
+      nearestKSearch (index_t index, unsigned int k,
+                      std::vector<index_t> &k_indices, std::vector<float> &k_sqr_distances) const
       {
         if (indices_ == nullptr)
         {
-          assert (index >= 0 && index < static_cast<int> (input_->size ()) && "Out-of-bounds error in nearestKSearch!");
+          assert (index >= 0 && index < static_cast<index_t> (input_->size ()) && "Out-of-bounds error in nearestKSearch!");
           return (nearestKSearch ((*input_)[index], k, k_indices, k_sqr_distances));
         }
-        assert (index >= 0 && index < static_cast<int> (indices_->size ()) && "Out-of-bounds error in nearestKSearch!");
+        assert (index >= 0 && index < static_cast<index_t> (indices_->size ()) && "Out-of-bounds error in nearestKSearch!");
 
         return (nearestKSearch ((*input_)[(*indices_)[index]], k, k_indices, k_sqr_distances));
       }
@@ -218,8 +218,8 @@ namespace pcl
         * returned.
         * \return number of neighbors found in radius
         */
-      virtual int
-      radiusSearch (const PointT &p_q, double radius, std::vector<int> &k_indices,
+      virtual index_t
+      radiusSearch (const PointT &p_q, double radius, std::vector<index_t> &k_indices,
                     std::vector<float> &k_sqr_distances, unsigned int max_nn = 0) const = 0;
 
       /** \brief Search for all the nearest neighbors of the query point in a given radius.
@@ -239,12 +239,12 @@ namespace pcl
         *
         * \exception asserts in debug mode if the index is not between 0 and the maximum number of points
         */
-      virtual int
-      radiusSearch (const PointCloud &cloud, int index, double radius,
-                    std::vector<int> &k_indices, std::vector<float> &k_sqr_distances,
+      virtual index_t
+      radiusSearch (const PointCloud &cloud, index_t index, double radius,
+                    std::vector<index_t> &k_indices, std::vector<float> &k_sqr_distances,
                     unsigned int max_nn = 0) const
       {
-        assert (index >= 0 && index < static_cast<int> (cloud.size ()) && "Out-of-bounds error in radiusSearch!");
+        assert (index >= 0 && index < static_cast<index_t> (cloud.size ()) && "Out-of-bounds error in radiusSearch!");
         return (radiusSearch(cloud[index], radius, k_indices, k_sqr_distances, max_nn));
       }
 
@@ -258,8 +258,8 @@ namespace pcl
         * returned.
         * \return number of neighbors found in radius
         */
-      template <typename PointTDiff> inline int
-      radiusSearchT (const PointTDiff &point, double radius, std::vector<int> &k_indices,
+      template <typename PointTDiff> inline index_t
+      radiusSearchT (const PointTDiff &point, double radius, std::vector<index_t> &k_indices,
                      std::vector<float> &k_sqr_distances, unsigned int max_nn = 0) const
       {
         PointT p;
@@ -286,16 +286,16 @@ namespace pcl
         *
         * \exception asserts in debug mode if the index is not between 0 and the maximum number of points
         */
-      virtual int
-      radiusSearch (int index, double radius, std::vector<int> &k_indices,
+      virtual index_t
+      radiusSearch (index_t index, double radius, std::vector<index_t> &k_indices,
                     std::vector<float> &k_sqr_distances, unsigned int max_nn = 0) const
       {
         if (indices_ == nullptr)
         {
-          assert (index >= 0 && index < static_cast<int> (input_->size ()) && "Out-of-bounds error in radiusSearch!");
+          assert (index >= 0 && index < static_cast<index_t> (input_->size ()) && "Out-of-bounds error in radiusSearch!");
           return (radiusSearch ((*input_)[index], radius, k_indices, k_sqr_distances, max_nn));
         }
-        assert (index >= 0 && index < static_cast<int> (indices_->size ()) && "Out-of-bounds error in radiusSearch!");
+        assert (index >= 0 && index < static_cast<index_t> (indices_->size ()) && "Out-of-bounds error in radiusSearch!");
         return (radiusSearch ((*input_)[(*indices_)[index]], radius, k_indices, k_sqr_distances, max_nn));
       }
 

@@ -163,14 +163,14 @@ namespace pcl
       setSearchMethod (const KdTreePtr& tree);
 
       /** \brief Returns the number of neighbours to find. */
-      unsigned int
+      uindex_t
       getNumberOfNeighbours () const;
 
       /** \brief Allows to set the number of neighbours to find.
         * \param[in] neighbour_number new number of neighbours
         */
       void
-      setNumberOfNeighbours (unsigned int neighbour_number);
+      setNumberOfNeighbours (uindex_t neighbour_number);
 
       /** \brief Returns the points that must belong to foreground. */
       std::vector<PointT, Eigen::aligned_allocator<PointT> >
@@ -225,7 +225,7 @@ namespace pcl
         * \param[out] sink_weight calculated weight for the (point, sink) edge
         */
       void
-      calculateUnaryPotential (int point, double& source_weight, double& sink_weight) const;
+      calculateUnaryPotential (index_t point, double& source_weight, double& sink_weight) const;
 
       /** \brief This method simply adds the edge from the source point to the target point with a given weight.
         * \param[in] source index of the source point of the edge
@@ -233,7 +233,7 @@ namespace pcl
         * \param[in] weight weight that will be assigned to the (source, target) edge
         */
       bool
-      addEdge (int source, int target, double weight);
+      addEdge (index_t source, index_t target, double weight);
 
       /** \brief Returns the binary potential(smooth cost) for the given indices of points.
         * In other words it returns weight that must be assigned to the edge from source to target point.
@@ -241,7 +241,7 @@ namespace pcl
         * \param[in] target index of the target point of the edge
         */
       double
-      calculateBinaryPotential (int source, int target) const;
+      calculateBinaryPotential (index_t source, index_t target) const;
 
       /** \brief This method recalculates unary potentials(data cost) if some changes were made, instead of creating new graph. */
       bool
@@ -281,7 +281,7 @@ namespace pcl
       KdTreePtr search_;
 
       /** \brief Stores the number of neighbors to find. */
-      unsigned int number_of_neighbours_;
+      uindex_t number_of_neighbours_;
 
       /** \brief Signalizes if the graph is valid. */
       bool graph_is_valid_;
@@ -308,7 +308,7 @@ namespace pcl
       std::vector< VertexDescriptor > vertices_;
 
       /** \brief Stores the information about the edges that were added to the graph. It is used to avoid the duplicate edges. */
-      std::vector< std::set<int> > edge_marker_;
+      std::vector< std::set<index_t> > edge_marker_;
 
       /** \brief Stores the vertex that serves as source. */
       VertexDescriptor source_;

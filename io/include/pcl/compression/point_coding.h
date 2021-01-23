@@ -94,7 +94,7 @@ class PointCoding
       * \param pointCount_arg: amounts of points within point cloud
       */
     inline void
-    setPointCount (unsigned int pointCount_arg)
+    setPointCount (uindex_t pointCount_arg)
     {
       pointDiffDataVector_.reserve (pointCount_arg * 3);
     }
@@ -126,7 +126,7 @@ class PointCoding
       * \param inputCloud_arg input point cloud
       */
     void
-    encodePoints (const typename std::vector<int>& indexVector_arg, const double* referencePoint_arg,
+    encodePoints (const typename std::vector<index_t>& indexVector_arg, const double* referencePoint_arg,
                   PointCloudConstPtr inputCloud_arg)
     {
       std::size_t len = indexVector_arg.size ();
@@ -137,13 +137,13 @@ class PointCoding
         unsigned char diffX, diffY, diffZ;
 
         // retrieve point from cloud
-        const int& idx = indexVector_arg[i];
+        const index_t& idx = indexVector_arg[i];
         const PointT& idxPoint = (*inputCloud_arg)[idx];
 
         // differentially encode point coordinates and truncate overflow
-        diffX = static_cast<unsigned char> (std::max (-127, std::min<int>(127, static_cast<int> ((idxPoint.x - referencePoint_arg[0])  / pointCompressionResolution_))));
-        diffY = static_cast<unsigned char> (std::max (-127, std::min<int>(127, static_cast<int> ((idxPoint.y - referencePoint_arg[1])  / pointCompressionResolution_))));
-        diffZ = static_cast<unsigned char> (std::max (-127, std::min<int>(127, static_cast<int> ((idxPoint.z - referencePoint_arg[2])  / pointCompressionResolution_))));
+        diffX = static_cast<unsigned char> (std::max (index_t (-127), std::min<index_t>(index_t (127), static_cast<index_t> ((idxPoint.x - referencePoint_arg[0])  / pointCompressionResolution_))));
+        diffY = static_cast<unsigned char> (std::max (index_t (-127), std::min<index_t>(index_t (127), static_cast<index_t> ((idxPoint.y - referencePoint_arg[1])  / pointCompressionResolution_))));
+        diffZ = static_cast<unsigned char> (std::max (index_t (-127), std::min<index_t>(index_t (127), static_cast<index_t> ((idxPoint.z - referencePoint_arg[2])  / pointCompressionResolution_))));
 
         // store information in differential point vector
         pointDiffDataVector_.push_back (diffX);
@@ -164,7 +164,7 @@ class PointCoding
     {
       assert (beginIdx_arg <= endIdx_arg);
 
-      unsigned int pointCount = static_cast<unsigned int> (endIdx_arg - beginIdx_arg);
+      uindex_t pointCount = static_cast<uindex_t> (endIdx_arg - beginIdx_arg);
 
       // iterate over points within current voxel
       for (std::size_t i = 0; i < pointCount; i++)

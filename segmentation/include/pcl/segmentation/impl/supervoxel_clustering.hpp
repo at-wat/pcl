@@ -212,7 +212,7 @@ pcl::SupervoxelClustering<PointT>::computeVoxelData ()
   voxel_centroid_cloud_->resize (adjacency_octree_->getLeafCount ());
   typename LeafVectorT::iterator leaf_itr = adjacency_octree_->begin ();
   typename PointCloudT::iterator cent_cloud_itr = voxel_centroid_cloud_->begin ();
-  for (int idx = 0 ; leaf_itr != adjacency_octree_->end (); ++leaf_itr, ++cent_cloud_itr, ++idx)
+  for (index_t idx = 0 ; leaf_itr != adjacency_octree_->end (); ++leaf_itr, ++cent_cloud_itr, ++idx)
   {
     VoxelData& new_voxel_data = (*leaf_itr)->getData ();
     //Add the point to the centroid cloud
@@ -250,7 +250,7 @@ pcl::SupervoxelClustering<PointT>::computeVoxelData ()
       voxel_data.owner_ = nullptr;
       voxel_data.distance_ = std::numeric_limits<float>::max ();
       //Get the number of points in this leaf
-      int num_points = (*leaf_itr)->getPointCounter ();
+      index_t num_points = (*leaf_itr)->getPointCounter ();
       voxel_data.curvature_ /= num_points;
     }
   }
@@ -381,7 +381,7 @@ pcl::SupervoxelClustering<PointT>::selectInitialSupervoxelSeeds (Indices &seed_i
   std::vector<int> seed_indices_orig;
   seed_indices_orig.resize (num_seeds, 0);
   seed_indices.clear ();
-  std::vector<int> closest_index;
+  std::vector<index_t> closest_index;
   std::vector<float> distance;
   closest_index.resize(1,0);
   distance.resize(1,0);
@@ -397,7 +397,7 @@ pcl::SupervoxelClustering<PointT>::selectInitialSupervoxelSeeds (Indices &seed_i
     seed_indices_orig[i] = closest_index[0];
   }
   
-  std::vector<int> neighbors;
+  std::vector<index_t> neighbors;
   std::vector<float> sqr_distances;
   seed_indices.reserve (seed_indices_orig.size ());
   float search_radius = 0.5f*seed_resolution_;
@@ -406,7 +406,7 @@ pcl::SupervoxelClustering<PointT>::selectInitialSupervoxelSeeds (Indices &seed_i
   float min_points = 0.05f * (search_radius)*(search_radius) * 3.1415926536f  / (resolution_*resolution_);
   for (const auto &index_orig : seed_indices_orig)
   {
-    int num = voxel_kdtree_->radiusSearch (index_orig, search_radius , neighbors, sqr_distances);
+    index_t num = voxel_kdtree_->radiusSearch (index_orig, search_radius , neighbors, sqr_distances);
     if ( num > min_points)
     {
       seed_indices.push_back (index_orig);
@@ -497,7 +497,7 @@ pcl::SupervoxelClustering<PointT>::getSupervoxelAdjacencyList (VoxelAdjacencyLis
     std::uint32_t label = sv_itr->getLabel ();
     std::set<std::uint32_t> neighbor_labels;
     sv_itr->getNeighborLabels (neighbor_labels);
-    for (const unsigned int &neighbor_label : neighbor_labels)
+    for (const uindex_t &neighbor_label : neighbor_labels)
     {
       bool edge_added;
       EdgeID edge;
@@ -539,7 +539,7 @@ pcl::SupervoxelClustering<PointT>::getSupervoxelAdjacency (std::multimap<std::ui
     std::uint32_t label = sv_itr->getLabel ();
     std::set<std::uint32_t> neighbor_labels;
     sv_itr->getNeighborLabels (neighbor_labels);
-    for (const unsigned int &neighbor_label : neighbor_labels)
+    for (const uindex_t &neighbor_label : neighbor_labels)
       label_adjacency.insert (std::pair<std::uint32_t,std::uint32_t> (label, neighbor_label) );
     //if (neighbor_labels.size () == 0)
     //  std::cout << label<<"(size="<<sv_itr->size () << ") has "<<neighbor_labels.size () << "\n";

@@ -154,7 +154,7 @@ namespace pcl
           * returned.
           * \return number of neighbors found in radius
           */
-        int
+        index_t
         radiusSearch (const PointT &p_q,
                       double radius,
                       Indices &k_indices,
@@ -174,7 +174,7 @@ namespace pcl
            * \return number of neighbors found
            * @todo still need to implements this functionality
           */
-        int
+        index_t
         nearestKSearch (const PointT &p_q,
                         int k,
                         Indices &k_indices,
@@ -242,7 +242,7 @@ namespace pcl
         }
 
         inline void
-        clipRange (int& begin, int &end, int min, int max) const
+        clipRange (index_t& begin, index_t &end, index_t min, index_t max) const
         {
           begin = std::max (std::min (begin, max), min);
           end   = std::min (std::max (end, min), max);
@@ -257,8 +257,8 @@ namespace pcl
           * \param[out] maxY the max Y box coordinate
           */
         void
-        getProjectedRadiusSearchBox (const PointT& point, float squared_radius, unsigned& minX, unsigned& minY,
-                                     unsigned& maxX, unsigned& maxY) const;
+        getProjectedRadiusSearchBox (const PointT& point, float squared_radius, uindex_t& minX, uindex_t& minY,
+                                     uindex_t& maxX, uindex_t& maxY) const;
 
 
         /** \brief the projection matrix. Either set by user or calculated by the first / each input cloud */
@@ -274,7 +274,7 @@ namespace pcl
         const float eps_;
 
         /** \brief using only a subsample of points to calculate the projection matrix. pyramid_level_ = use down sampled cloud given by pyramid_level_*/
-        const unsigned pyramid_level_;
+        const uindex_t pyramid_level_;
         
         /** \brief mask, indicating whether the point was in the indices list or not.*/
         std::vector<unsigned char> mask_;

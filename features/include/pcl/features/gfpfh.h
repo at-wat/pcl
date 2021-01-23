@@ -112,7 +112,7 @@ namespace pcl
       setNumberOfClasses (std::uint32_t n) { number_of_classes_ = n; }
 
       /** \brief Return the size of the descriptor. */
-      inline int
+      inline index_t
       descriptorSize () const { return descriptor_size_; }
 
       /** \brief Overloaded computed method from pcl::Feature.
@@ -133,20 +133,20 @@ namespace pcl
 
       /** \brief Return the dominant label of a set of points. */
       std::uint32_t
-      getDominantLabel (const std::vector<int>& indices);
+      getDominantLabel (const std::vector<index_t>& indices);
 
       /** \brief Compute the fixed-length histograms of transitions. */
-      void computeTransitionHistograms (const std::vector< std::vector<int> >& label_histograms,
-                                        std::vector< std::vector<int> >& transition_histograms);
+      void computeTransitionHistograms (const std::vector< std::vector<index_t> >& label_histograms,
+                                        std::vector< std::vector<index_t> >& transition_histograms);
 
       /** \brief Compute the distance of each transition histogram to the mean. */
       void
-      computeDistancesToMean (const std::vector< std::vector<int> >& transition_histograms,
+      computeDistancesToMean (const std::vector< std::vector<index_t> >& transition_histograms,
                               std::vector<float>& distances);
 
       /** \brief Return the Intersection Kernel distance between two histograms. */
       float
-      computeHIKDistance (const std::vector<int>& histogram,
+      computeHIKDistance (const std::vector<index_t>& histogram,
                           const std::vector<float>& mean_histogram);
 
       /** \brief Compute the binned histogram of distance values. */
@@ -156,7 +156,7 @@ namespace pcl
 
       /** \brief Compute the mean histogram of the given set of histograms. */
       void
-      computeMeanHistogram (const std::vector< std::vector<int> >& histograms,
+      computeMeanHistogram (const std::vector< std::vector<index_t> >& histograms,
                             std::vector<float>& mean_histogram);
 
     private:
@@ -167,7 +167,7 @@ namespace pcl
       std::uint32_t number_of_classes_;
 
       /** \brief Dimension of the descriptors. */
-      int descriptor_size_;
+      index_t descriptor_size_;
    };
 }
 

@@ -114,7 +114,7 @@ namespace pcl
         */
       bool 
       computePairFeatures (const pcl::PointCloud<PointInT> &cloud, const pcl::PointCloud<PointNT> &normals, 
-                           int p_idx, int q_idx, float &f1, float &f2, float &f3, float &f4);
+                           index_t p_idx, index_t q_idx, float &f1, float &f2, float &f3, float &f4);
 
       /** \brief Estimate the SPFH (Simple Point Feature Histograms) individual signatures of the three angular
         * (f1, f2, f3) features for a given point based on its spatial neighborhood of 3D points with normals
@@ -129,8 +129,8 @@ namespace pcl
         */
       void 
       computePointSPFHSignature (const pcl::PointCloud<PointInT> &cloud, 
-                                 const pcl::PointCloud<PointNT> &normals, int p_idx, int row, 
-                                 const std::vector<int> &indices, 
+                                 const pcl::PointCloud<PointNT> &normals, index_t p_idx, index_t row, 
+                                 const std::vector<index_t> &indices, 
                                  Eigen::MatrixXf &hist_f1, Eigen::MatrixXf &hist_f2, Eigen::MatrixXf &hist_f3);
 
       /** \brief Weight the SPFH (Simple Point Feature Histograms) individual histograms to create the final FPFH
@@ -146,7 +146,7 @@ namespace pcl
       weightPointSPFHSignature (const Eigen::MatrixXf &hist_f1, 
                                 const Eigen::MatrixXf &hist_f2, 
                                 const Eigen::MatrixXf &hist_f3, 
-                                const std::vector<int> &indices, 
+                                const std::vector<index_t> &indices, 
                                 const std::vector<float> &dists, 
                                 Eigen::VectorXf &fpfh_histogram);
 
@@ -185,7 +185,7 @@ namespace pcl
         * \param[out] hist_f3 the resultant SPFH histogram for feature f3
         */
       void 
-      computeSPFHSignatures (std::vector<int> &spf_hist_lookup, 
+      computeSPFHSignatures (std::vector<index_t> &spf_hist_lookup, 
                              Eigen::MatrixXf &hist_f1, Eigen::MatrixXf &hist_f2, Eigen::MatrixXf &hist_f3);
 
       /** \brief Estimate the Fast Point Feature Histograms (FPFH) descriptors at a set of points given by

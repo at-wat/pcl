@@ -83,7 +83,7 @@ pcl::search::KdTree<PointT,Tree>::setInputCloud (
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-template <typename PointT, class Tree> int
+template <typename PointT, class Tree> pcl::index_t
 pcl::search::KdTree<PointT,Tree>::nearestKSearch (
     const PointT &point, int k, Indices &k_indices,
     std::vector<float> &k_sqr_distances) const
@@ -92,7 +92,7 @@ pcl::search::KdTree<PointT,Tree>::nearestKSearch (
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-template <typename PointT, class Tree> int
+template <typename PointT, class Tree> pcl::index_t
 pcl::search::KdTree<PointT,Tree>::radiusSearch (
     const PointT& point, double radius, 
     Indices &k_indices, std::vector<float> &k_sqr_distances,

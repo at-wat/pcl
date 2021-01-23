@@ -116,7 +116,7 @@ namespace pcl
         */
       bool 
       isBoundaryPoint (const pcl::PointCloud<PointInT> &cloud, 
-                       int q_idx, const pcl::Indices &indices, 
+                       index_t q_idx, const pcl::Indices &indices, 
                        const Eigen::Vector4f &u, const Eigen::Vector4f &v, const float angle_threshold);
 
       /** \brief Check whether a point is a boundary point in a planar patch of projected points given by indices.

@@ -43,14 +43,14 @@
 #include <iostream>
 
 void
-pcl::surface::SimplificationRemoveUnusedVertices::simplify(const pcl::PolygonMesh& input, pcl::PolygonMesh& output, std::vector<int>& indices)
+pcl::surface::SimplificationRemoveUnusedVertices::simplify(const pcl::PolygonMesh& input, pcl::PolygonMesh& output, std::vector<index_t>& indices)
 {
   if (input.polygons.empty ())
     return;
 
-  unsigned int nr_points = input.cloud.width * input.cloud.height;
+  uindex_t nr_points = input.cloud.width * input.cloud.height;
 
-  std::vector<int> new_indices (nr_points, -1);
+  std::vector<index_t> new_indices (nr_points, -1);
   indices.clear ();
   indices.reserve (nr_points);
 
@@ -59,7 +59,7 @@ pcl::surface::SimplificationRemoveUnusedVertices::simplify(const pcl::PolygonMes
     for (const auto &vertex : polygon.vertices)
       if (new_indices[ vertex ] == -1 )
       {
-        new_indices[vertex] = static_cast<int> (indices.size ());
+        new_indices[vertex] = static_cast<index_t> (indices.size ());
         indices.push_back (vertex);
       }
 
