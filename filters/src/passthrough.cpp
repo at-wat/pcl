@@ -297,7 +297,7 @@ pcl::PassThrough<pcl::PCLPointCloud2>::applyFilter (Indices &indices)
   indices.resize (indices_->size ());
   removed_indices_->resize (indices_->size ());
   int oii = 0, rii = 0;  // oii = output indices iterator, rii = removed indices iterator
-  const std::uint32_t xyz_offset[3] = {input_->fields[x_idx_].offset, input_->fields[y_idx_].offset, input_->fields[z_idx_].offset};
+  const uindex_t xyz_offset[3] = {input_->fields[x_idx_].offset, input_->fields[y_idx_].offset, input_->fields[z_idx_].offset};
   PCL_DEBUG ("[pcl::%s<pcl::PCLPointCloud2>::applyFilter] Field offsets: x: %u, y: %u, z: %u.\n", filter_name_.c_str (), xyz_offset[0], xyz_offset[1], xyz_offset[2]);
 
   // Has a field name been specified?
