@@ -72,7 +72,7 @@ template <typename PointSource, typename PointTarget, typename Scalar>
 void
 TransformationEstimationSVD<PointSource, PointTarget, Scalar>::
     estimateRigidTransformation(const pcl::PointCloud<PointSource>& cloud_src,
-                                const std::vector<int>& indices_src,
+                                const std::vector<index_t>& indices_src,
                                 const pcl::PointCloud<PointTarget>& cloud_tgt,
                                 Matrix4& transformation_matrix) const
 {
@@ -93,9 +93,9 @@ template <typename PointSource, typename PointTarget, typename Scalar>
 inline void
 TransformationEstimationSVD<PointSource, PointTarget, Scalar>::
     estimateRigidTransformation(const pcl::PointCloud<PointSource>& cloud_src,
-                                const std::vector<int>& indices_src,
+                                const std::vector<index_t>& indices_src,
                                 const pcl::PointCloud<PointTarget>& cloud_tgt,
-                                const std::vector<int>& indices_tgt,
+                                const std::vector<index_t>& indices_tgt,
                                 Matrix4& transformation_matrix) const
 {
   if (indices_src.size() != indices_tgt.size()) {
@@ -132,13 +132,13 @@ TransformationEstimationSVD<PointSource, PointTarget, Scalar>::
                                 Matrix4& transformation_matrix) const
 {
   // Convert to Eigen format
-  const int npts = static_cast<int>(source_it.size());
+  const index_t npts = static_cast<index_t>(source_it.size());
 
   if (use_umeyama_) {
     Eigen::Matrix<Scalar, 3, Eigen::Dynamic> cloud_src(3, npts);
     Eigen::Matrix<Scalar, 3, Eigen::Dynamic> cloud_tgt(3, npts);
 
-    for (int i = 0; i < npts; ++i) {
+    for (index_t i = 0; i < npts; ++i) {
       cloud_src(0, i) = source_it->x;
       cloud_src(1, i) = source_it->y;
       cloud_src(2, i) = source_it->z;

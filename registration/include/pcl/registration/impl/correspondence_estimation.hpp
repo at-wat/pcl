@@ -124,7 +124,7 @@ CorrespondenceEstimation<PointSource, PointTarget, Scalar>::determineCorresponde
 
   correspondences.resize(indices_->size());
 
-  std::vector<int> index(1);
+  std::vector<index_t> index(1);
   std::vector<float> distance(1);
   pcl::Correspondence corr;
   unsigned int nr_valid_correspondences = 0;
@@ -184,13 +184,13 @@ CorrespondenceEstimation<PointSource, PointTarget, Scalar>::
   double max_dist_sqr = max_distance * max_distance;
 
   correspondences.resize(indices_->size());
-  std::vector<int> index(1);
+  std::vector<index_t> index(1);
   std::vector<float> distance(1);
-  std::vector<int> index_reciprocal(1);
+  std::vector<index_t> index_reciprocal(1);
   std::vector<float> distance_reciprocal(1);
   pcl::Correspondence corr;
   unsigned int nr_valid_correspondences = 0;
-  int target_idx = 0;
+  index_t target_idx = 0;
 
   // Check if the template types are the same. If true, avoid a copy.
   // Both point types MUST be registered using the POINT_CLOUD_REGISTER_POINT_STRUCT

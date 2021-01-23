@@ -294,7 +294,7 @@ pcl::CPCSegmentation<PointT>::WeightedRandomSampleConsensus::computeModel (int)
   iterations_ = 0;
   best_score_ = -std::numeric_limits<double>::max ();
 
-  std::vector<int> selection;
+  std::vector<index_t> selection;
   Eigen::VectorXf model_coefficients;
 
   unsigned skipped_count = 0;

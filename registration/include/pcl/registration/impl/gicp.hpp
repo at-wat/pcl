@@ -63,7 +63,7 @@ GeneralizedIterativeClosestPoint<PointSource, PointTarget>::computeCovariances(
   }
 
   Eigen::Vector3d mean;
-  std::vector<int> nn_indecies;
+  std::vector<index_t> nn_indecies;
   nn_indecies.reserve(k_correspondences_);
   std::vector<float> nn_dist_sq;
   nn_dist_sq.reserve(k_correspondences_);
@@ -187,9 +187,9 @@ template <typename PointSource, typename PointTarget>
 void
 GeneralizedIterativeClosestPoint<PointSource, PointTarget>::
     estimateRigidTransformationBFGS(const PointCloudSource& cloud_src,
-                                    const std::vector<int>& indices_src,
+                                    const std::vector<index_t>& indices_src,
                                     const PointCloudTarget& cloud_tgt,
-                                    const std::vector<int>& indices_tgt,
+                                    const std::vector<index_t>& indices_tgt,
                                     Eigen::Matrix4f& transformation_matrix)
 {
   if (indices_src.size() < 4) // need at least 4 samples
@@ -264,8 +264,8 @@ GeneralizedIterativeClosestPoint<PointSource, PointTarget>::
   Eigen::Matrix4f transformation_matrix = gicp_->base_transformation_;
   gicp_->applyState(transformation_matrix, x);
   double f = 0;
-  int m = static_cast<int>(gicp_->tmp_idx_src_->size());
-  for (int i = 0; i < m; ++i) {
+  index_t m = static_cast<index_t>(gicp_->tmp_idx_src_->size());
+  for (index_t i = 0; i < m; ++i) {
     // The last coordinate, p_src[3] is guaranteed to be set to 1.0 in registration.hpp
     Vector4fMapConst p_src =
         (*gicp_->tmp_src_)[(*gicp_->tmp_idx_src_)[i]].getVector4fMap();
@@ -295,8 +295,8 @@ GeneralizedIterativeClosestPoint<PointSource, PointTarget>::
   g.setZero();
   // Eigen::Vector3d g_t = g.head<3> ();
   Eigen::Matrix3d R = Eigen::Matrix3d::Zero();
-  int m = static_cast<int>(gicp_->tmp_idx_src_->size());
-  for (int i = 0; i < m; ++i) {
+  index_t m = static_cast<index_t>(gicp_->tmp_idx_src_->size());
+  for (index_t i = 0; i < m; ++i) {
     // The last coordinate, p_src[3] is guaranteed to be set to 1.0 in registration.hpp
     Vector4fMapConst p_src =
         (*gicp_->tmp_src_)[(*gicp_->tmp_idx_src_)[i]].getVector4fMap();
@@ -333,8 +333,8 @@ GeneralizedIterativeClosestPoint<PointSource, PointTarget>::
   f = 0;
   g.setZero();
   Eigen::Matrix3d R = Eigen::Matrix3d::Zero();
-  const int m = static_cast<int>(gicp_->tmp_idx_src_->size());
-  for (int i = 0; i < m; ++i) {
+  const index_t m = static_cast<index_t>(gicp_->tmp_idx_src_->size());
+  for (index_t i = 0; i < m; ++i) {
     // The last coordinate, p_src[3] is guaranteed to be set to 1.0 in registration.hpp
     Vector4fMapConst p_src =
         (*gicp_->tmp_src_)[(*gicp_->tmp_idx_src_)[i]].getVector4fMap();
@@ -413,15 +413,15 @@ GeneralizedIterativeClosestPoint<PointSource, PointTarget>::computeTransformatio
   nr_iterations_ = 0;
   converged_ = false;
   double dist_threshold = corr_dist_threshold_ * corr_dist_threshold_;
-  std::vector<int> nn_indices(1);
+  std::vector<index_t> nn_indices(1);
   std::vector<float> nn_dists(1);
 
   pcl::transformPointCloud(output, output, guess);
 
   while (!converged_) {
     std::size_t cnt = 0;
-    std::vector<int> source_indices(indices_->size());
-    std::vector<int> target_indices(indices_->size());
+    std::vector<index_t> source_indices(indices_->size());
+    std::vector<index_t> target_indices(indices_->size());
 
     // guess corresponds to base_t and transformation_ to t
     Eigen::Matrix4d transform_R = Eigen::Matrix4d::Zero();
@@ -457,7 +457,7 @@ GeneralizedIterativeClosestPoint<PointSource, PointTarget>::computeTransformatio
         temp += C2;
         // M = temp^-1
         M = temp.inverse();
-        source_indices[cnt] = static_cast<int>(i);
+        source_indices[cnt] = static_cast<index_t>(i);
         target_indices[cnt] = nn_indices[0];
         cnt++;
       }
